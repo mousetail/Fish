@@ -196,7 +196,7 @@ function update_url_hash() {
             "mode": input_mode
         }
     );
-    window.location.hash = '#' + encodeURIComponent(hash_value);
+    window.location.hash = '#' + encodeURIComponent(hash_value).replace('(', '%28').replace(')', '%29');
     localStorage.setItem('last_program', hash_value);
 }
 
