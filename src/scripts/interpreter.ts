@@ -129,10 +129,10 @@ const commands = {
         push(o, Number(pop(o) == pop(o)))
     },
     ')': (o: ProgramState) => {
-        push(o, Number(pop(o) > pop(o)))
+        push(o, Number(pop(o) < pop(o)))
     },
     '(': (o: ProgramState) => {
-        push(o, Number(pop(o) < pop(o)))
+        push(o, Number(pop(o) > pop(o)))
     },
     '\'': (o: ProgramState) => {
         o.string_parsing_mode = '\''
