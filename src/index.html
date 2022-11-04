@@ -40,6 +40,28 @@
             color: white;
         }
 
+        .box {
+            padding: 0.25rem;
+            margin: 0.25rem;
+            border: 1px solid darkgrey;
+            background-color: #222;
+            white-space: pre;
+        }
+
+        button:disabled {
+            color: grey;
+        }
+
+        button:hover:not(:disabled) {
+            color: black;
+            background-color: white;
+            border: 1px solid white;
+        }
+
+        .small-box {
+            min-height: 4rem;
+        }
+
         .code {
             height: 18rem;
         }
@@ -52,15 +74,19 @@
             color: black;
             background-color: white;
         }
+
+        a {
+            color: white;
+        }
     </style>
 </head>
 
 <body>
-    <div class="two-columns">
-        <h1>&lt;&gt;&lt; Interpreter by Mousetail</h1>
-        <div>
+    <div class="two-columns" style="justify-content: space-between;">
+        <h1><a href="https://esolangs.org/wiki/Fish#The_register">&gt;&lt;&gt; (Fish)</a> Interpreter by Mousetail</h1>
+        <div style="width: 20rem;">
             <select id="examples">
-                <option> - </option>
+                <option> - Load a Example - </option>
             </select>
         </div>
     </div>
@@ -69,18 +95,21 @@
 
     <div class="two-columns">
         <label>
-            Initial Stack
-            <input>
+            Initial Stack:
+            <input id="initial-stack">
         </label>
-        <button disabled>
+        <button id="chars">
             Chars
         </button>
-        <button>
+        <button id="numbers" disabled>
             Numbers
         </button>
+        <div style="flex-grow: 1;">
+
+        </div>
         <label>
-            Input
-            <input>
+            Input:
+            <input id="initial-input">
         </label>
     </div>
 
@@ -93,25 +122,36 @@
     <hr>
 
     <div class="two-columns">
-        <div class="program" id="program">
+        <div class="program box big-box" id="program">
 
         </div>
         <div>
-            <h3>Stack</h3>
+            <h3>Stack:</h3>
 
-            <div class="stack" id="stack">
-
-            </div>
-
-            <h3>Input Queue</h3>
-
-            <div class="input-queue" id="input-queue">
+            <div class="stack box small-box" id="stack">
 
             </div>
 
-            <h3>Output</h3>
+            <div class="two-columns">
+                <div>
+                    <h3>Cursor Position:</h3>
+                    <div class="box small-box" id="cursor-postion-box"></div>
+                </div>
+                <div>
+                    <h3>Register:</h3>
+                    <div class="box small-box" id="register-box"></div>
+                </div>
+            </div>
 
-            <div class="output" id="output"></div>
+            <h3>Input Queue:</h3>
+
+            <div class="input-queue box small-box" id="input-queue">
+
+            </div>
+
+            <h3>Output:</h3>
+
+            <div class="output box small-box" id="output"></div>
         </div>
     </div>
 
