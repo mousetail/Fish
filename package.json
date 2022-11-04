@@ -1,0 +1,14 @@
+{
+  "name": "fish_interpreter",
+  "version": "1.0.0",
+  "description": "A fish interpreter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Maurits van Riezen (mousetail)",
+  "license": "LGPL-3.0-or-later",
+  "dependencies": {
+    "parcel": "^2.7.0"
+  }
+}

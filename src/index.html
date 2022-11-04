@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: monospace;
+            background-color: black;
+            color: white;
+        }
+
+        .two-columns {
+            display: flex;
+        }
+
+        .two-columns>div {
+            width: 50%;
+        }
+
+        textarea {
+            width: 100%;
+        }
+
+        textarea,
+        input,
+        button,
+        select,
+        option {
+            padding: 0.25rem;
+            border-radius: 0;
+            background-color: transparent;
+            border: 1px solid grey;
+            margin: 0.25rem;
+            color: white;
+        }
+
+        .code {
+            height: 18rem;
+        }
+
+        .program {
+            white-space: pre;
+        }
+
+        .cursor {
+            color: black;
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="two-columns">
+        <h1>&lt;&gt;&lt; Interpreter by Mousetail</h1>
+        <div>
+            <select id="examples">
+                <option> - </option>
+            </select>
+        </div>
+    </div>
+
+    <textarea class="code" id="code"></textarea>
+
+    <div class="two-columns">
+        <label>
+            Initial Stack
+            <input>
+        </label>
+        <button disabled>
+            Chars
+        </button>
+        <button>
+            Numbers
+        </button>
+        <label>
+            Input
+            <input>
+        </label>
+    </div>
+
+    <div class="button-row">
+        <button id="start">Start</button>
+        <button id="step">Step</button>
+        <button id="reset">Reset</button>
+    </div>
+
+    <hr>
+
+    <div class="two-columns">
+        <div class="program" id="program">
+
+        </div>
+        <div>
+            <h3>Stack</h3>
+
+            <div class="stack" id="stack">
+
+            </div>
+
+            <h3>Input Queue</h3>
+
+            <div class="input-queue" id="input-queue">
+
+            </div>
+
+            <h3>Output</h3>
+
+            <div class="output" id="output"></div>
+        </div>
+    </div>
+
+    <script src="scripts/main.ts" type="module"></script>
+</body>
+
+</html>
