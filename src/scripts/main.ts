@@ -2,15 +2,15 @@ import { step, ProgramState } from './interpreter';
 import { examples } from './examples';
 
 
-let program = document.getElementById('program') as HTMLDivElement;
-let stack = document.getElementById('stack') as HTMLDivElement;
-let input_queue = document.getElementById('input-queue') as HTMLDivElement;
-let output = document.getElementById('output') as HTMLDivElement;
+const program = document.getElementById('program') as HTMLDivElement;
+const stack = document.getElementById('stack') as HTMLDivElement;
+const input_queue = document.getElementById('input-queue') as HTMLDivElement;
+const output = document.getElementById('output') as HTMLDivElement;
 const cursor_postion_box = document.getElementById('cursor-postion-box') as HTMLDivElement;
 const register_box = document.getElementById('register-box') as HTMLDivElement;
 
-let code = document.getElementById('code') as HTMLTextAreaElement;
-let examples_select = document.getElementById('examples') as HTMLSelectElement;
+const code = document.getElementById('code') as HTMLTextAreaElement;
+const examples_select = document.getElementById('examples') as HTMLSelectElement;
 
 const start_button = document.getElementById('start') as HTMLButtonElement;
 const step_button = document.getElementById('step') as HTMLButtonElement;
@@ -72,6 +72,15 @@ let program_state: ProgramState = {
     stopped: false
 }
 
+function stop_execution_if_active() {
+    if (started_task_id != undefined) {
+        clearInterval(started_task_id);
+        started_task_id = undefined;
+        has_started = false;
+        start_button.innerText = 'Start'
+    }
+}
+
 function reset() {
     output.textContent = "";
 
@@ -118,16 +127,20 @@ function step_and_update() {
     }
 
     if (!program_state.stopped) {
-        step(program_state);
+        try {
+            step(program_state);
+        } catch (ex) {
+            let error = document.createElement('span');
+            error.textContent = "Something Smells fishy: " + (ex as Error).message;
+            error.style.color = "red";
+            output.appendChild(error);
+            program_state.stopped = true;
+            stop_execution_if_active()
+        }
         update_ui_for_program(program_state);
     } else {
-        console.log("Program ended");
-        if (started_task_id != undefined) {
-            clearInterval(started_task_id);
-            started_task_id = undefined;
-            start_button.innerText = 'Start'
-            has_started = false;
-        }
+        console.log("Program ended, started_task_id = ", started_task_id);
+        stop_execution_if_active();
     }
 }
 
@@ -146,14 +159,15 @@ start_button.addEventListener(
 
 reset_button.addEventListener(
     'click', () => {
-        if (started_task_id !== undefined) {
-            clearInterval(started_task_id);
-        }; reset(); update_ui_for_program(program_state);
+        stop_execution_if_active();
+        reset();
+        update_ui_for_program(program_state);
     }
 )
 
 step_button.addEventListener(
     'click', () => {
+        stop_execution_if_active();
         step_and_update();
     }
 )

@@ -251,6 +251,8 @@ export function step(o: ProgramState) {
 
     } else if (Object.hasOwnProperty.call(commands, token)) {
         commands[token](o);
+    } else {
+        throw new Error("Unexpected token: " + token + " Note: all symbols must be lower case");
     }
     o.cursor[0] += o.cursor_direction[0];
     o.cursor[1] += o.cursor_direction[1];
