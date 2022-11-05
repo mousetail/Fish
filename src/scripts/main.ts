@@ -1,15 +1,17 @@
 import { step, ProgramState } from './interpreter';
 import { examples } from './examples';
 
+const play_button_label = "⏵ Start"
+const pause_button_label = "⏸︎ Pause"
 
-const program = document.getElementById('program') as HTMLDivElement;
-const stack = document.getElementById('stack') as HTMLDivElement;
-const input_queue = document.getElementById('input-queue') as HTMLDivElement;
-const output = document.getElementById('output') as HTMLDivElement;
+const program_div = document.getElementById('program') as HTMLDivElement;
+const stack_div = document.getElementById('stack') as HTMLDivElement;
+const input_queue_div = document.getElementById('input-queue') as HTMLDivElement;
+const output_div = document.getElementById('output') as HTMLDivElement;
 const cursor_postion_box = document.getElementById('cursor-postion-box') as HTMLDivElement;
 const register_box = document.getElementById('register-box') as HTMLDivElement;
 
-const code = document.getElementById('code') as HTMLTextAreaElement;
+const code_textarea = document.getElementById('code') as HTMLTextAreaElement;
 const examples_select = document.getElementById('examples') as HTMLSelectElement;
 
 const start_button = document.getElementById('start') as HTMLButtonElement;
@@ -33,7 +35,7 @@ function load_data_from_hash() {
             decodeURIComponent(window.location.hash.substring(1))
         )
         input_mode = data.mode;
-        code.value = data.text;
+        code_textarea.value = data.text;
         initial_input.value = data.input;
         initial_stack.value = data.stack;
     }
@@ -54,8 +56,8 @@ function text_with_cursor(text: string[], cursor: [number, number]): (string | N
 }
 
 function update_ui_for_program(o: ProgramState) {
-    program.replaceChildren(...text_with_cursor(o.program, o.cursor));
-    stack.innerText = o.stacks.map(i => i.contents.map(j => '' + j).join(' ')).join('\n');
+    program_div.replaceChildren(...text_with_cursor(o.program, o.cursor));
+    stack_div.innerText = o.stacks.map(i => i.contents.map(j => '' + j).join(' ')).join('\n');
 
     cursor_postion_box.textContent = JSON.stringify(o.cursor);
     register_box.textContent = o.stacks.map(i => i.register).join(', ');
@@ -77,18 +79,25 @@ function stop_execution_if_active() {
         clearInterval(started_task_id);
         started_task_id = undefined;
         has_started = false;
-        start_button.innerText = 'Start'
+        start_button.innerText = play_button_label
     }
 }
 
 function reset() {
-    output.textContent = "";
+    output_div.textContent = "";
 
-    let program = code.value.split('\n');
+    let program = code_textarea.value.split('\n');
     let longest_line = program.reduce((a, b) => Math.max(a, b.length), 0);
     program = program.map(
         i => i.padEnd(longest_line)
     )
+
+    let size = program_div.getClientRects()[0];
+    let text_size = Math.min(
+        size.width / longest_line,
+        size.height / program.length / 2
+    )
+    program_div.style.fontSize = `${text_size}px`;
 
     let initial_stack_values: number[];
     if (input_mode === 'chars' || initial_stack.value === "") {
@@ -97,7 +106,7 @@ function reset() {
         initial_stack_values = initial_stack.value.split(' ').map(i => Number.parseFloat(i));
     }
 
-    input_queue.textContent = initial_input.value;
+    input_queue_div.textContent = initial_input.value;
 
     program_state = {
         stacks: [{ contents: initial_stack_values, register: undefined }],
@@ -106,12 +115,12 @@ function reset() {
         cursor_direction: [1, 0],
         string_parsing_mode: undefined,
         input: () => {
-            let val = input_queue.textContent ?? "";
-            input_queue.textContent = val.substring(1);
+            let val = input_queue_div.textContent ?? "";
+            input_queue_div.textContent = val.substring(1);
             return val ? val.charCodeAt(0) : -1;
         },
         output: (o: number) => {
-            output.textContent += String.fromCharCode(o);
+            output_div.textContent += String.fromCharCode(o);
         },
         stopped: false
     }
@@ -133,8 +142,9 @@ function step_and_update() {
             let error = document.createElement('span');
             error.textContent = "Something Smells fishy: " + (ex as Error).message;
             error.style.color = "red";
-            output.appendChild(error);
+            output_div.appendChild(error);
             program_state.stopped = true;
+            has_started = false;
             stop_execution_if_active()
         }
         update_ui_for_program(program_state);
@@ -148,11 +158,11 @@ start_button.addEventListener(
     'click', () => {
         if (started_task_id === undefined) {
             started_task_id = setInterval(step_and_update, 128);
-            start_button.innerText = 'Pause'
+            start_button.innerText = pause_button_label;
         } else {
             clearInterval(started_task_id);
             started_task_id = undefined;
-            start_button.innerText = 'Start'
+            start_button.innerText = play_button_label;
         }
     }
 )
@@ -180,7 +190,7 @@ for (let example of examples) {
 }
 
 examples_select.addEventListener('change', () => {
-    code.value = examples_select.value;
+    code_textarea.value = examples_select.value;
 })
 
 chars_button.addEventListener('click', () => {
@@ -204,7 +214,7 @@ numbers_button.click();
 function update_url_hash() {
     let hash_value = JSON.stringify(
         {
-            "text": code.value,
+            "text": code_textarea.value,
             "input": initial_input.value,
             "stack": initial_stack.value,
             "mode": input_mode
@@ -214,7 +224,7 @@ function update_url_hash() {
     localStorage.setItem('last_program', hash_value);
 }
 
-code.addEventListener('change', update_url_hash);
+code_textarea.addEventListener('change', update_url_hash);
 initial_input.addEventListener('change', update_url_hash);
 initial_stack.addEventListener('change', update_url_hash);
 
