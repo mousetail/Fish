@@ -65,7 +65,7 @@ function update_ui_for_program(o: ProgramState) {
 
 let program_state: ProgramState = {
     stacks: [{ contents: [], register: undefined }],
-    program: ['"hello, world"r\\', '    ~~~   o;!?l<'],
+    program: ['a'],
     cursor: [0, 0],
     cursor_direction: [1, 0],
     string_parsing_mode: undefined,
@@ -78,7 +78,6 @@ function stop_execution_if_active() {
     if (started_task_id != undefined) {
         clearInterval(started_task_id);
         started_task_id = undefined;
-        has_started = false;
         start_button.innerText = play_button_label
     }
 }
