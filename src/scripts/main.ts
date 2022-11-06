@@ -30,10 +30,18 @@ let has_started = false;
 
 function load_data_from_hash() {
     if (window.location.hash) {
-        console.log(decodeURIComponent(window.location.hash))
-        let data = JSON.parse(
-            decodeURIComponent(window.location.hash.substring(1))
-        )
+
+        let data;
+        try {
+            data = JSON.parse(
+                atob(window.location.hash.substring(1))
+            )
+        } catch {
+            // Fallback to old version
+            data = JSON.parse(
+                decodeURIComponent(window.location.hash.substring(1))
+            )
+        }
         input_mode = data.mode;
         code_textarea.value = data.text;
         initial_input.value = data.input;
@@ -233,7 +241,8 @@ function update_url_hash() {
             "mode": input_mode
         }
     );
-    window.location.hash = '#' + encodeURIComponent(hash_value).replace('(', '%28').replace(')', '%29');
+    //window.location.hash = '#' + encodeURIComponent(hash_value).replace('(', '%28').replace(')', '%29');
+    window.location.hash = '#' + btoa(hash_value);
     localStorage.setItem('last_program', hash_value);
 }
 
