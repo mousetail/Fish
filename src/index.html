@@ -8,6 +8,12 @@
     <style>
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .pad {
+            padding: 0.25rem;
         }
 
         body {
@@ -24,9 +30,10 @@
             width: 50%;
         }
 
-        textarea {
-            width: 100%;
+        textarea, #program {
+            width: calc(100% - 0.5rem);
             font-size: 2rem;
+            padding: 0.25rem;
         }
 
         textarea,
@@ -40,13 +47,22 @@
             border: 1px solid grey;
             margin: 0.25rem;
             color: white;
+            appearance: none;
+        }
+
+        option {
+            background-color: black;
+        }
+
+        select {
+            width: calc(100% - 0.5rem);
         }
 
         .box {
             padding: 0.25rem;
             margin: 0.25rem;
             border: 1px solid darkgrey;
-            background-color: #222;
+            background-color: #111;
             white-space: pre;
         }
 
@@ -64,8 +80,12 @@
             min-height: 4rem;
         }
 
-        .code {
-            height: 18rem;
+        .extra-small-box {
+            min-height: 2rem;
+        }
+
+        .code, #program {
+            height: 22rem;
         }
 
         .program {
@@ -80,84 +100,182 @@
         a {
             color: white;
         }
+
+        code {
+            background-color: #222;
+            padding: 0.2rem;
+            display: inline-block;
+        }
+
+        p {
+            margin: 0.2rem 0;
+        }
     </style>
 </head>
 
-<body>
+<body class="pad">
     <div class="two-columns" style="justify-content: space-between;">
-        <h1><a href="https://esolangs.org/wiki/Fish#The_register">&gt;&lt;&gt; (Fish)</a> Interpreter by Mousetail</h1>
-        <div style="width: 20rem;">
+        <h1><a href="https://esolangs.org/wiki/Fish">&gt;&lt;&gt; (Fish)</a> Interpreter by Mousetail</h1>
+        <div>
             <select id="examples">
                 <option> - Load a Example - </option>
             </select>
         </div>
     </div>
 
-    <textarea class="code" id="code"></textarea>
-
     <div class="two-columns">
-        <label>
-            Initial Stack:
-            <input id="initial-stack">
-        </label>
-        <button id="chars">
-            Chars
-        </button>
-        <button id="numbers" disabled>
-            Numbers
-        </button>
-        <div style="flex-grow: 1;">
+        <div style="flex-grow: 1;" class="pad">
+            <textarea class="code" id="code"></textarea>
+            <div class="program box big-box" style="display: none;" id="program"></div>        
+            
+            <div class="two-columns">
+                <label>
+                    Initial Stack:
+                    <input id="initial-stack">
+                </label>
+                <button id="chars">
+                    Chars
+                </button>
+                <button id="numbers" disabled>
+                    Numbers
+                </button>
+                <div style="flex-grow: 1;">
 
-        </div>
-        <label>
-            Input:
-            <input id="initial-input">
-        </label>
-    </div>
-
-    <div class="button-row">
-        <button id="start">⏵ Start</button>
-        <button id="step">⏳︎ Step</button>
-        <button id="reset">⏹︎ Reset</button>
-    </div>
-
-    <hr>
-
-    <div class="two-columns">
-        <div class="program box big-box" id="program">
-
-        </div>
-        <div>
-            <h3>Stack:</h3>
-
-            <div class="stack box small-box" id="stack">
-
+                </div>
+                <label>
+                    Input:
+                    <input id="initial-input">
+                </label>
             </div>
+        
+
+            <hr>
+
+            <div class="button-row">
+                <button id="start">⏵ Start</button>
+                <button id="step">⏳︎ Step</button>
+                <button id="reset">⏹︎ Reset</button>
+            </div>
+
+            
 
             <div class="two-columns">
                 <div>
+                    <h3>Stack:</h3>
+
+                    <div class="stack box small-box" id="stack"></div>
+
                     <h3>Cursor Position:</h3>
-                    <div class="box small-box" id="cursor-postion-box"></div>
+                    <div class="box extra-small-box" id="cursor-postion-box"></div>
                 </div>
                 <div>
+                    <h3>Input Queue:</h3>
+                    <div class="input-queue box small-box" id="input-queue"></div>
+
                     <h3>Register:</h3>
-                    <div class="box small-box" id="register-box"></div>
+                    <div class="box extra-small-box" id="register-box"></div>
+
                 </div>
-            </div>
-
-            <h3>Input Queue:</h3>
-
-            <div class="input-queue box small-box" id="input-queue">
-
             </div>
 
             <h3>Output:</h3>
 
-            <div class="output box small-box" id="output"></div>
+            <div class="output box" id="output" style="height: 15rem;"></div>
+            
+        </div>
+        <div class="pad" style="width: 40rem;">
+            <h2>Cheat Sheet</h2>
+
+            <h3>Movement</h3>
+
+            <div class="two-columns">
+                <div>
+                    <p><code><>^v</code> Change Cursor Direction</p>
+                </div>
+                <div>
+                    <p><code>/\|-#</code> Mirrors</p>
+                </div>
+            </div>
+
+            <p><code>x</code> Random Direction</p>
+
+            <p><code>!</code> Skip the next instruction, moving 2 spaces instead of 1</p>
+
+            <p><code>?</code> Pop 1 value of the stack, if it's 0 skip the next instruction and move forward 2 spaces.</p>
+
+            <p><code>.</code> Pop 2 values of the stack then move to that position.</p>
+
+            <h3>Literals</h3>
+
+            <div class="two-columns">
+                <div>
+                    <p><code>0123456789</code> Push the number (0-9)</p>
+                </div>
+                <div>
+                    <p><code>abcdef</code> Push the hexadecimal (10-15)</p>
+                </div>
+            </div>
+
+            <p><code>+-*%</code> Pop 2 values of the stack then perform the given operation.</p>
+
+            <p><code>,</code> Divide the top 2 values of the stack.</p>
+
+            <p><code>=</code> Pop 2 values of the stack, push 1 if they are equal and 0 otherwise</p>
+
+            <p><code>)(</code> Greater than, less than. Push 1 or 0 to the stack.</p>
+
+            <p><code>'"</code> Enable or disable string parsing mode, then all characters are pushed to the stack instead of executed.</p>
+
+            <h3>Stack</h3>
+
+            <div class="two-columns">
+                <div>
+                    <p><code>:</code> Duplicate the top item on the stack</p>
+                    <p><code>$</code> Move the top element of the stack back 1</p>
+                </div>
+                <div>
+                    <p><code>~</code> Delete the top element of the stack</p>
+                    <p><code>@</code> Move the top elemnt of the stack back 2</p>
+                </div>
+            </div>
+
+            <p><code>{}</code> Shifts the entire stack left or right</p>
+
+            <p><code>r</code> Reverse the stack</p>
+
+            <p><code>l</code> Push the length of the stack to the stack</p>
+
+            <p><code>[</code> Pop N from the stack, then create a new stack containing the top N elements of the old stack.</p>
+
+            <p><code>]</code> Go back to the previous stack, adding all eleemnts of the top stack back to it.</p>
+
+            <h3>IO</h3>
+
+            <div class="two-columns">
+                <div>
+                    <p><code>o</code> output a character</p>
+                </div>
+                <div>
+                    <p><code>n</code> output a number in decimal</p>
+                </div>
+            </div>
+            <p><code>i</code> read a character</p>
+
+            <h3>Other</h3>
+
+            <p><code>&</code> If the register is empty, pop the top element of the stack and move it to the register. Else push the value of the register to the stack.</p>
+
+            <p><code>g</code> Pop the top 2 elements then push the code value at that position</p>
+
+            <p><code>p</code> Pop a postion and a value from the stack, then write the character to that position in the code.</p>
+
+            <p><code>;</code> Halt</p>
+
         </div>
     </div>
-
-    <div class="footer">
+        
+    <hr>
+    <div class="footer pad">
         The &gt;&lt;&gt; (Fish) langauge was designed by <a
             href="https://esolangs.org/wiki/User:Harpyon">Harypon</a><br>
         This implementation was built by <a href="https://mousetail.nl"">Mousetail</a>, some code taken from

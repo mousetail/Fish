@@ -74,7 +74,7 @@ let program_state: ProgramState = {
     stopped: false
 }
 
-function stop_execution_if_active() {
+function end_update_loop_if_active() {
     if (started_task_id != undefined) {
         clearInterval(started_task_id);
         started_task_id = undefined;
@@ -82,21 +82,34 @@ function stop_execution_if_active() {
     }
 }
 
+function enable_editor() {
+    console.log("Editor enabled");
+    program_div.style.display = 'none';
+    code_textarea.style.display = 'block';
+}
+
 function reset() {
     output_div.textContent = "";
 
     let program = code_textarea.value.split('\n');
+    program_div.style.display = 'block';
+    code_textarea.style.display = 'none';
     let longest_line = program.reduce((a, b) => Math.max(a, b.length), 0);
     program = program.map(
         i => i.padEnd(longest_line)
     )
 
     let size = program_div.getClientRects()[0];
-    let text_size = Math.min(
-        size.width / longest_line,
-        size.height / program.length / 2
-    )
+    let text_size = Math.max(
+        Math.min(
+            size.width / longest_line,
+            size.height / program.length / 2,
+            80
+        ),
+        12
+    );
     program_div.style.fontSize = `${text_size}px`;
+    code_textarea.style.fontSize = `${text_size}px`;
 
     let initial_stack_values: number[];
     if (input_mode === 'chars' || initial_stack.value === "") {
@@ -144,12 +157,12 @@ function step_and_update() {
             output_div.appendChild(error);
             program_state.stopped = true;
             has_started = false;
-            stop_execution_if_active()
+            end_update_loop_if_active()
         }
         update_ui_for_program(program_state);
     } else {
         console.log("Program ended, started_task_id = ", started_task_id);
-        stop_execution_if_active();
+        end_update_loop_if_active();
     }
 }
 
@@ -168,15 +181,16 @@ start_button.addEventListener(
 
 reset_button.addEventListener(
     'click', () => {
-        stop_execution_if_active();
-        reset();
+        end_update_loop_if_active();
+        enable_editor();
+        has_started = false;
         update_ui_for_program(program_state);
     }
 )
 
 step_button.addEventListener(
     'click', () => {
-        stop_execution_if_active();
+        end_update_loop_if_active();
         step_and_update();
     }
 )
