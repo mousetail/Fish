@@ -12,6 +12,11 @@
             padding: 0;
         }
 
+        hr {
+            margin: 1rem auto;
+            width: calc(100% - 4rem);
+        }
+
         h1,
         h2,
         h3,
@@ -32,11 +37,19 @@
         }
 
         .two-columns {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
         }
 
         .two-columns>div {
             flex-grow: 1;
+        }
+
+        textarea:active,
+        textarea:focus,
+        textarea:focus-visible,
+        textarea:focus-within {
+            outline: none;
         }
 
         textarea,
@@ -127,7 +140,6 @@
 <body class="pad">
     <div class="two-columns" style="justify-content: space-between;">
         <h1><a href="https://esolangs.org/wiki/Fish">&gt;&lt;&gt; (Fish)</a> Interpreter by Mousetail</h1>
-        <div></div>
         <div>
             <select id="examples">
                 <option> - Load a Example - </option>
@@ -135,8 +147,8 @@
         </div>
     </div>
 
-    <div class="two-columns">
-        <div style="flex-grow: 1;" class="pad">
+    <div class="two-columns" style="grid-template-columns: 1fr 40rem;">
+        <div class="pad">
             <div>
                 <span id="code-info">Cursor at [0,0], 0 bytes/0 chars.</span>
                 <!-- <button>Copy Link</button>
@@ -148,17 +160,18 @@
             <div class="program box big-box" style="display: none;" id="program"></div>
 
             <div class="two-columns">
-                <label>
-                    Initial Stack:
-                    <input id="initial-stack">
-                </label>
-                <button id="chars">
-                    Chars
-                </button>
-                <button id="numbers" disabled>
-                    Numbers
-                </button>
-
+                <div>
+                    <label>
+                        Initial Stack:
+                        <input id="initial-stack">
+                    </label><br>
+                    <button id="chars">
+                        Chars
+                    </button>
+                    <button id="numbers" disabled>
+                        Numbers
+                    </button>
+                </div>
                 <label>
                     Input:
                     <input id="initial-input">
@@ -200,7 +213,7 @@
             <div class="output box" id="output" style="height: 15rem;"></div>
 
         </div>
-        <div class="pad" style="width: 40rem;">
+        <div class="pad">
             <h2>Cheat Sheet</h2>
 
             <h3>Movement</h3>

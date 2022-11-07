@@ -8,7 +8,9 @@ export function start_code_info_event_listeners(code: HTMLTextAreaElement) {
 
         code_info.innerText = `Cursor at [${area_before[area_before.length - 1].length},${area_before.length - 1}], ${length} chars.`
     }
-    code.addEventListener('input', on_input);
+    //code.addEventListener('input', on_input);
+    document.addEventListener('selectionchange', on_input);
+
     on_input();
 
 }
