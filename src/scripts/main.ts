@@ -1,5 +1,6 @@
 import { step, ProgramState } from './interpreter';
 import { examples } from './examples';
+import { start_code_info_event_listeners } from './update_code_info';
 
 const play_button_label = "⏵ Start"
 const pause_button_label = "⏸︎ Pause"
@@ -251,3 +252,4 @@ initial_input.addEventListener('change', update_url_hash);
 initial_stack.addEventListener('change', update_url_hash);
 
 load_data_from_hash();
+start_code_info_event_listeners(code_textarea);

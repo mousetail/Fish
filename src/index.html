@@ -12,6 +12,13 @@
             padding: 0;
         }
 
+        h1,
+        h2,
+        h3,
+        h4 {
+            margin-bottom: 0.5rem;
+        }
+
         .pad {
             padding: 0.25rem;
         }
@@ -20,6 +27,8 @@
             font-family: monospace;
             background-color: black;
             color: white;
+
+            --disabled-color: #222;
         }
 
         .two-columns {
@@ -27,10 +36,11 @@
         }
 
         .two-columns>div {
-            width: 50%;
+            flex-grow: 1;
         }
 
-        textarea, #program {
+        textarea,
+        #program {
             width: calc(100% - 0.5rem);
             font-size: 2rem;
             padding: 0.25rem;
@@ -62,7 +72,7 @@
             padding: 0.25rem;
             margin: 0.25rem;
             border: 1px solid darkgrey;
-            background-color: #111;
+            background-color: var(--disabled-color);
             white-space: pre;
         }
 
@@ -84,7 +94,8 @@
             min-height: 2rem;
         }
 
-        .code, #program {
+        .code,
+        #program {
             height: 22rem;
         }
 
@@ -102,7 +113,7 @@
         }
 
         code {
-            background-color: #222;
+            background-color: #333;
             padding: 0.2rem;
             display: inline-block;
         }
@@ -116,6 +127,7 @@
 <body class="pad">
     <div class="two-columns" style="justify-content: space-between;">
         <h1><a href="https://esolangs.org/wiki/Fish">&gt;&lt;&gt; (Fish)</a> Interpreter by Mousetail</h1>
+        <div></div>
         <div>
             <select id="examples">
                 <option> - Load a Example - </option>
@@ -125,9 +137,16 @@
 
     <div class="two-columns">
         <div style="flex-grow: 1;" class="pad">
+            <div>
+                <span id="code-info">Cursor at [0,0], 0 bytes/0 chars.</span>
+                <!-- <button>Copy Link</button>
+                <button>TIO</button>
+                <button>Copy CGSE post</button> -->
+            </div>
+
             <textarea class="code" id="code"></textarea>
-            <div class="program box big-box" style="display: none;" id="program"></div>        
-            
+            <div class="program box big-box" style="display: none;" id="program"></div>
+
             <div class="two-columns">
                 <label>
                     Initial Stack:
@@ -139,15 +158,13 @@
                 <button id="numbers" disabled>
                     Numbers
                 </button>
-                <div style="flex-grow: 1;">
 
-                </div>
                 <label>
                     Input:
                     <input id="initial-input">
                 </label>
             </div>
-        
+
 
             <hr>
 
@@ -157,7 +174,7 @@
                 <button id="reset">⏹︎ Reset</button>
             </div>
 
-            
+
 
             <div class="two-columns">
                 <div>
@@ -181,7 +198,7 @@
             <h3>Output:</h3>
 
             <div class="output box" id="output" style="height: 15rem;"></div>
-            
+
         </div>
         <div class="pad" style="width: 40rem;">
             <h2>Cheat Sheet</h2>
@@ -201,7 +218,8 @@
 
             <p><code>!</code> Skip the next instruction, moving 2 spaces instead of 1</p>
 
-            <p><code>?</code> Pop 1 value of the stack, if it's 0 skip the next instruction and move forward 2 spaces.</p>
+            <p><code>?</code> Pop 1 value of the stack, if it's 0 skip the next instruction and move forward 2 spaces.
+            </p>
 
             <p><code>.</code> Pop 2 values of the stack then move to that position.</p>
 
@@ -224,7 +242,8 @@
 
             <p><code>)(</code> Greater than, less than. Push 1 or 0 to the stack.</p>
 
-            <p><code>'"</code> Enable or disable string parsing mode. In string parsing mode all characters are pushed to the stack instead of executed.</p>
+            <p><code>'"</code> Enable or disable string parsing mode. In string parsing mode all characters are pushed
+                to the stack instead of executed.</p>
 
             <h3>Stack</h3>
 
@@ -245,7 +264,8 @@
 
             <p><code>l</code> Push the length of the stack to the stack</p>
 
-            <p><code>[</code> Pop N from the stack, then create a new stack containing the top N elements of the old stack.</p>
+            <p><code>[</code> Pop N from the stack, then create a new stack containing the top N elements of the old
+                stack.</p>
 
             <p><code>]</code> Go back to the previous stack, adding all eleemnts of the top stack back to it.</p>
 
@@ -263,17 +283,19 @@
 
             <h3>Other</h3>
 
-            <p><code>&</code> If the register is empty, pop the top element of the stack and move it to the register. Else push the value of the register to the stack.</p>
+            <p><code>&</code> If the register is empty, pop the top element of the stack and move it to the register.
+                Else push the value of the register to the stack.</p>
 
             <p><code>g</code> Pop the top 2 elements then push the code value at that position</p>
 
-            <p><code>p</code> Pop a postion and a value from the stack, then write the character to that position in the code.</p>
+            <p><code>p</code> Pop a postion and a value from the stack, then write the character to that position in the
+                code.</p>
 
             <p><code>;</code> Halt</p>
 
         </div>
     </div>
-        
+
     <hr>
     <div class="footer pad">
         The &gt;&lt;&gt; (Fish) langauge was designed by <a
