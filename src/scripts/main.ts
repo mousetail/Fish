@@ -161,7 +161,8 @@ function step_and_update() {
     if (!program_state.stopped) {
         try {
             step(program_state);
-            path_drawer.tile([program_state.cursor[0], program_state.cursor[1]]);
+            path_drawer.tile([program_state.cursor[0], program_state.cursor[1]], program_state.program[0].length,
+                program_state.program.length);
 
         } catch (ex) {
             let error = document.createElement('span');

@@ -5,6 +5,11 @@ function lerp(from_start: number, from_end: number, to_start: number, to_end: nu
     return (x - from_start) / (from_end - from_start) * (to_end - to_start) + to_start
 }
 
+function get_path_offset(diff: number, width: number): number {
+    diff = (diff + width / 2) % width - width / 2
+    return Math.sign(diff);
+}
+
 export class PathDrawer {
     maps: Map<string, number>;
     previous_cursor_positon: [[number, number], [number, number]];
@@ -14,13 +19,20 @@ export class PathDrawer {
         this.previous_cursor_positon = [[-1, 0], [0, 0]];
     }
 
-    tile(tile: [number, number]) {
-        this.edge(this.previous_cursor_positon[0], this.previous_cursor_positon[1], tile);
+    tile(tile: [number, number], width: number, height: number) {
+        this.edge(this.previous_cursor_positon[0], this.previous_cursor_positon[1], tile, width, height);
         this.previous_cursor_positon = [this.previous_cursor_positon[1], tile];
     }
 
-    edge(from: [number, number], via: [number, number], to: [number, number]) {
-        const pos = JSON.stringify([via[0], via[1], from[0] - via[0], from[1] - via[1], to[0] - via[0], to[1] - via[1]]);
+    edge(from: [number, number], via: [number, number], to: [number, number], width: number, height: number) {
+        const pos = JSON.stringify(
+            [
+                via[0], via[1],
+                get_path_offset(from[0] - via[0], width),
+                get_path_offset(from[1] - via[1], height),
+                get_path_offset(to[0] - via[0], width),
+                get_path_offset(to[1] - via[1], height)
+            ]);
         this.maps.set(pos, (this.maps.get(pos) ?? 0) + 1)
     }
 
@@ -66,17 +78,15 @@ export class PathDrawer {
                     if (width === 1) {
                         color = 'red';
                     } else if (width < 10) {
-                        color = `rgb(${lerp(1, 10, 0, 255, width)},${lerp(1, 10, 255, 0, width)},0)`;
+                        color = `rgb(${lerp(1, 10, 0, 255, width)},${lerp(1, 10, 155, 0, width)},0)`;
                     } else if (width < 25) {
-                        color = `rgb(0, 255, ${lerp(10, 25, 0, 255, width)})`
+                        color = `rgb(0, 155, ${lerp(10, 25, 0, 255, width)})`
                     }
                     else if (width < 100) {
                         color = `rgb(0,${lerp(25, 100, 255, 0, width)},255)`;
                     } else {
                         color = 'white';
                     }
-
-                    console.log(`x: ${x} y: ${y} width:${width} pos: ${[x, y, path1[0], path1[1], path2[0], path2[1]]}`);
 
                     let path = document.createElementNS(svg_namespace, "path") as SVGPathElement;
                     path.setAttribute('stroke', color);
