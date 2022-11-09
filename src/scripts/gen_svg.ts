@@ -6,7 +6,7 @@ function lerp(from_start: number, from_end: number, to_start: number, to_end: nu
 }
 
 function get_path_offset(diff: number, width: number): number {
-    diff = (diff + width / 2) % width - width / 2
+    diff = (diff + width + width / 2) % width - width / 2
     return Math.sign(diff);
 }
 
