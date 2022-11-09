@@ -1,6 +1,10 @@
 
 const svg_namespace = "http://www.w3.org/2000/svg";
 
+function lerp(from_start: number, from_end: number, to_start: number, to_end: number, x: number): number {
+    return (x - from_start) / (from_end - from_start) * (to_end - to_start) + to_start
+}
+
 export class PathDrawer {
     maps: Map<string, number>;
     previous_cursor_positon: [[number, number], [number, number]];
@@ -62,9 +66,12 @@ export class PathDrawer {
                     if (width === 1) {
                         color = 'red';
                     } else if (width < 10) {
-                        color = `rgb(${255 * (10 - width) / 10},${255 * width / 20},0)`;
-                    } else if (width < 100) {
-                        color = `rgb(0,${255 * (90 - width + 10) / 90},${255 * (width - 10) / 90})`;
+                        color = `rgb(${lerp(1, 10, 0, 255, width)},${lerp(1, 10, 255, 0, width)},0)`;
+                    } else if (width < 25) {
+                        color = `rgb(0, 255, ${lerp(10, 25, 0, 255, width)})`
+                    }
+                    else if (width < 100) {
+                        color = `rgb(0,${lerp(25, 100, 255, 0, width)},255)`;
                     } else {
                         color = 'white';
                     }
