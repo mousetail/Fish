@@ -1,6 +1,7 @@
 import { step, ProgramState } from './interpreter';
 import { examples } from './examples';
 import { start_code_info_event_listeners } from './update_code_info';
+import { PathDrawer } from './gen_svg';
 
 const play_button_label = "⏵ Start"
 const pause_button_label = "⏸︎ Pause"
@@ -28,6 +29,7 @@ const initial_input = document.getElementById('initial-input') as HTMLInputEleme
 let input_mode: 'numbers' | 'chars' = 'numbers';
 let started_task_id: number | undefined = undefined;
 let has_started = false;
+const path_drawer = new PathDrawer();
 
 function load_data_from_hash() {
     if (window.location.hash) {
@@ -111,8 +113,8 @@ function reset() {
     let size = program_div.getClientRects()[0];
     let text_size = Math.max(
         Math.min(
-            size.width / longest_line,
-            size.height / program.length / 2,
+            0.8 * size.width / longest_line,
+            0.8 * size.height / program.length,
             80
         ),
         12
@@ -159,6 +161,8 @@ function step_and_update() {
     if (!program_state.stopped) {
         try {
             step(program_state);
+            path_drawer.tile([program_state.cursor[0], program_state.cursor[1]]);
+
         } catch (ex) {
             let error = document.createElement('span');
             error.textContent = "Something Smells fishy: " + (ex as Error).message;
@@ -194,6 +198,15 @@ reset_button.addEventListener(
         enable_editor();
         has_started = false;
         update_ui_for_program(program_state);
+
+        let svg = path_drawer.gen_svg(program_state.program[0].length, program_state.program.length);
+        let svg_source = '<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="' + svg.getAttribute('viewBox')
+            + '">' + svg.innerHTML + "</svg>";
+        code_textarea.style.backgroundImage = 'url("data:image/svg+xml,' + encodeURIComponent(svg_source) + '")';
+        code_textarea.style.backgroundSize = (14 / 12) * program_state.program[0].length + 'em';
+
+        path_drawer.reset();
+        document.body.appendChild(svg);
     }
 )
 
@@ -203,13 +216,6 @@ step_button.addEventListener(
         step_and_update();
     }
 )
-
-for (let example of examples) {
-    let option = document.createElement('option');
-    option.innerText = example.name;
-    option.value = example.code;
-    examples_select.appendChild(option);
-}
 
 examples_select.addEventListener('change', () => {
     code_textarea.value = examples_select.value;
@@ -250,6 +256,13 @@ function update_url_hash() {
 code_textarea.addEventListener('change', update_url_hash);
 initial_input.addEventListener('change', update_url_hash);
 initial_stack.addEventListener('change', update_url_hash);
+
+for (let example of examples) {
+    let option = document.createElement('option');
+    option.innerText = example.name;
+    option.value = example.code;
+    examples_select.appendChild(option);
+}
 
 load_data_from_hash();
 start_code_info_event_listeners(code_textarea);
