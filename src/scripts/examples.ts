@@ -13,7 +13,7 @@ export let examples: ExampleProgram[] = [
         code: "0voa                            ~/?=0:\\\n voa            oooo'Buzz'~<     /\n >1+:aa*1+=?;::5%:{3%:@*?\\?/'zziF'oooo/\n ^oa                 n:~~/\n"
     },
     {
-        name: "Fbonacci",
+        name: "Fibonacci",
         code: "10::n' 'o&+&$10."
     },
     {
