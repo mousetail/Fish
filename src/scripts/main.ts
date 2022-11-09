@@ -30,6 +30,7 @@ let input_mode: 'numbers' | 'chars' = 'numbers';
 let started_task_id: number | undefined = undefined;
 let has_started = false;
 const path_drawer = new PathDrawer();
+let previous_blob: string | undefined = undefined;
 
 function load_data_from_hash() {
     if (window.location.hash) {
@@ -193,6 +194,24 @@ start_button.addEventListener(
     }
 )
 
+function generateBackgroundImage() {
+    let svg = path_drawer.gen_svg(program_state.program[0].length, program_state.program.length);
+    let svg_source = '<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="' + svg.getAttribute('viewBox')
+        + '">' + svg.innerHTML + "</svg>";
+
+    const blob = URL.createObjectURL(new Blob([svg_source], { type: "image/svg+xml" }));
+    code_textarea.style.backgroundImage = 'url("' + blob + '")';
+    code_textarea.style.backgroundSize = (12 / 12) * program_state.program[0].length + 'em';
+
+    if (previous_blob !== undefined) {
+        URL.revokeObjectURL(previous_blob);
+    }
+    previous_blob = blob;
+
+    path_drawer.reset();
+    document.body.appendChild(svg);
+}
+
 reset_button.addEventListener(
     'click', () => {
         end_update_loop_if_active();
@@ -200,14 +219,7 @@ reset_button.addEventListener(
         has_started = false;
         update_ui_for_program(program_state);
 
-        let svg = path_drawer.gen_svg(program_state.program[0].length, program_state.program.length);
-        let svg_source = '<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="' + svg.getAttribute('viewBox')
-            + '">' + svg.innerHTML + "</svg>";
-        code_textarea.style.backgroundImage = 'url("data:image/svg+xml,' + encodeURIComponent(svg_source) + '")';
-        code_textarea.style.backgroundSize = (14 / 12) * program_state.program[0].length + 'em';
-
-        path_drawer.reset();
-        document.body.appendChild(svg);
+        generateBackgroundImage();
     }
 )
 
