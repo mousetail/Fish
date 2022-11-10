@@ -31,5 +31,13 @@ export let examples: ExampleProgram[] = [
     {
         name: "Square Root",
         code: "1[:>:r:@@:@,\\;\n]~$\\!?={:,2+/n"
+    },
+    {
+        name: "Extract Questions",
+        code: ">i:0(?^:\"?\"=?v\\\"!.\"@=?v=?v\n^>l?v00. > ovr:    .12<  <\n ^ ~< ;!0^?l<<:"
+    },
+    {
+        name: "Maximum Average Ord",
+        code: "00001.\n$i:\"!\"(?v+$1+\n:$@:$,$&/(@\nv?(0&~$?/|.!00\n\\n;"
     }
 ]
