@@ -25,6 +25,7 @@ const numbers_button = document.getElementById('numbers') as HTMLButtonElement;
 
 const initial_stack = document.getElementById('initial-stack') as HTMLInputElement;
 const initial_input = document.getElementById('initial-input') as HTMLInputElement;
+const fast_forward_checkbox = document.getElementById('fast-forward') as HTMLInputElement;
 
 let input_mode: 'numbers' | 'chars' = 'numbers';
 let started_task_id: number | undefined = undefined;
@@ -172,11 +173,13 @@ function step_and_update() {
             output_div.appendChild(error);
             program_state.stopped = true;
             has_started = false;
+            generateBackgroundImage();
             end_update_loop_if_active()
         }
         update_ui_for_program(program_state);
     } else {
         console.log("Program ended, started_task_id = ", started_task_id);
+        generateBackgroundImage();
         end_update_loop_if_active();
     }
 }
@@ -184,7 +187,12 @@ function step_and_update() {
 start_button.addEventListener(
     'click', () => {
         if (started_task_id === undefined) {
-            started_task_id = setInterval(step_and_update, 128);
+            started_task_id = setInterval(() => {
+                let iteration = fast_forward_checkbox.checked ? 5 : 1;
+                for (let i = 0; i < iteration; i++) {
+                    step_and_update();
+                }
+            }, 128);
             start_button.innerText = pause_button_label;
         } else {
             clearInterval(started_task_id);
@@ -202,14 +210,16 @@ function generateBackgroundImage() {
     const blob = URL.createObjectURL(new Blob([svg_source], { type: "image/svg+xml" }));
     code_textarea.style.backgroundImage = 'url("' + blob + '")';
     code_textarea.style.backgroundSize = (12 / 12) * program_state.program[0].length + 'em';
+    program_div.style.backgroundImage = 'url("' + blob + '")';
+    program_div.style.backgroundSize = (12 / 12) * program_state.program[0].length + 'em';
 
     if (previous_blob !== undefined) {
         URL.revokeObjectURL(previous_blob);
     }
     previous_blob = blob;
 
-    path_drawer.reset();
-    document.body.appendChild(svg);
+
+    //document.body.appendChild(svg);
 }
 
 reset_button.addEventListener(
@@ -220,6 +230,7 @@ reset_button.addEventListener(
         update_ui_for_program(program_state);
 
         generateBackgroundImage();
+        path_drawer.reset();
     }
 )
 

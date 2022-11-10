@@ -37,7 +37,6 @@ export class PathDrawer {
     }
 
     gen_svg(width: number, height: number): SVGElement {
-        console.log(this.maps);
         let svg = document.createElementNS(svg_namespace, "svg");
         svg.setAttribute('style', `width:${20 * width}px; height:${20 * height}`);
         svg.setAttribute('viewBox', `-1 -1 ${width * 2} ${height * 2}`)

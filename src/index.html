@@ -85,6 +85,10 @@
             background-color: black;
         }
 
+        button {
+            font-size: inherit;
+        }
+
         select {
             width: calc(100% - 0.5rem);
         }
@@ -145,6 +149,29 @@
         p {
             margin: 0.2rem 0;
         }
+
+        .cheat-sheet {
+            font-size: smaller;
+        }
+
+        .button-row {
+            display: flex;
+            vertical-align: middle;
+            align-items: center;
+        }
+
+        input[type="checkbox"] {
+            width: 2em;
+            height: 2em;
+            border: 1px solid grey;
+            display: block;
+            position: relative;
+        }
+
+        input[type="checkbox"]:checked {
+            /* Use `visibility` instead of `display` to avoid recalculating layout */
+            background-color: white;
+        }
     </style>
 </head>
 
@@ -175,7 +202,7 @@
                     <label>
                         Initial Stack:
                         <input id="initial-stack">
-                    </label><br>
+                    </label>
                     <button id="chars">
                         Chars
                     </button>
@@ -196,6 +223,17 @@
                 <button id="start">⏵ Start</button>
                 <button id="step">⏳︎ Step</button>
                 <button id="reset">⏹︎ Reset</button>
+                <div style="flex-grow: 1;">
+
+                </div>
+
+
+                <input type="checkbox" id="fast-forward">
+                <div>
+                    <label for="fast-forward">
+                        » Fast Forward
+                    </label>
+                </div>
             </div>
 
 
@@ -224,7 +262,7 @@
             <div class="output box" id="output" style="height: 15rem;"></div>
 
         </div>
-        <div class="pad">
+        <div class="pad cheat-sheet">
             <h2>Cheat Sheet</h2>
 
             <h3>Movement</h3>
