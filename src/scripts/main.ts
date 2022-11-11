@@ -48,6 +48,14 @@ function load_data_from_hash() {
             )
         }
         input_mode = data.mode;
+        console.log("input mode: ", input_mode);
+        if (input_mode == 'chars') {
+            chars_button.disabled = true;
+            numbers_button.disabled = false;
+        } else {
+            chars_button.disabled = false;
+            numbers_button.disabled = true;
+        }
         code_textarea.value = data.text;
         initial_input.value = data.input;
         initial_stack.value = data.stack;
@@ -272,7 +280,7 @@ function update_url_hash() {
             "mode": input_mode
         }
     );
-    //window.location.hash = '#' + encodeURIComponent(hash_value).replace('(', '%28').replace(')', '%29');
+
     window.location.hash = '#' + btoa(hash_value);
     localStorage.setItem('last_program', hash_value);
 }
