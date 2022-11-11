@@ -178,7 +178,7 @@ const commands = {
         for (let i = 0; i < number; i++) {
             new_stack.push(pop(o));
         }
-        new_stack.reverse;
+        new_stack.reverse();
         o.stacks.push(
             {
                 contents: new_stack,
