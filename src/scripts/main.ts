@@ -48,7 +48,6 @@ function load_data_from_hash() {
             )
         }
         input_mode = data.mode;
-        console.log("input mode: ", input_mode);
         if (input_mode == 'chars') {
             chars_button.disabled = true;
             numbers_button.disabled = false;
@@ -104,7 +103,6 @@ function end_update_loop_if_active() {
 }
 
 function enable_editor() {
-    console.log("Editor enabled");
     program_div.style.display = 'none';
     code_textarea.style.display = 'block';
 }
@@ -268,8 +266,6 @@ numbers_button.addEventListener('click', () => {
 
     update_url_hash();
 })
-
-numbers_button.click();
 
 function update_url_hash() {
     let hash_value = JSON.stringify(
