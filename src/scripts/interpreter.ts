@@ -221,13 +221,25 @@ const commands = {
     },
     'g': (o: ProgramState) => {
         let [y, x] = [pop(o), pop(o)];
-        push(
-            o,
-            o.program[y].charCodeAt(x)
-        )
+        if (y < o.program.length && x < o.program[y].length) {
+            push(
+                o,
+                o.program[y].charCodeAt(x)
+            )
+        }
+        else {
+            push(
+                o,
+                0
+            )
+        }
     },
     'p': (o: ProgramState) => {
         let [y, x, v] = [pop(o), pop(o), pop(o)];
+        while (o.program.length < y) {
+            o.program.push('');
+        }
+        o.program[y] = o.program[y].padEnd(y + 1, '\x00');
         o.program[y] = o.program[y].substring(0, x) + String.fromCharCode(v) + o.program[y].substring(x + 1);
     },
     ';': (o: ProgramState) => {
@@ -247,7 +259,7 @@ export function step(o: ProgramState) {
         }
     }
 
-    else if (token === ' ') {
+    else if (token === ' ' || token === '\x00') {
 
     } else if (Object.hasOwnProperty.call(commands, token)) {
         commands[token](o);
@@ -258,7 +270,7 @@ export function step(o: ProgramState) {
     o.cursor[1] += o.cursor_direction[1];
 
     const program_size = [
-        o.program[0].length,
+        o.program.reduce((a, b) => Math.max(a, b.length), 0),
         o.program.length
     ]
 

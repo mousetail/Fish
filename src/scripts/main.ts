@@ -114,9 +114,6 @@ function reset() {
     program_div.style.display = 'block';
     code_textarea.style.display = 'none';
     let longest_line = program.reduce((a, b) => Math.max(a, b.length), 0);
-    program = program.map(
-        i => i.padEnd(longest_line)
-    )
 
     let size = program_div.getClientRects()[0];
     let text_size = Math.max(
@@ -223,9 +220,6 @@ function generateBackgroundImage() {
         URL.revokeObjectURL(previous_blob);
     }
     previous_blob = blob;
-
-
-    //document.body.appendChild(svg);
 }
 
 reset_button.addEventListener(
