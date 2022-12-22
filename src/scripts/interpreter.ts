@@ -250,7 +250,7 @@ const commands = {
 }
 
 export function step(o: ProgramState) {
-    let token = o.program[o.cursor[1]][o.cursor[0]];
+    let token = o.program[o.cursor[1]][o.cursor[0]] ?? '\x00';
     if (o.string_parsing_mode !== undefined) {
         if (token === o.string_parsing_mode) {
             o.string_parsing_mode = undefined
