@@ -236,7 +236,7 @@ const commands = {
     },
     'p': (o: ProgramState) => {
         let [y, x, v] = [pop(o), pop(o), pop(o)];
-        while (o.program.length < y) {
+        while (o.program.length <= y) {
             o.program.push('');
         }
         o.program[y] = o.program[y].padEnd(y + 1, '\x00');
