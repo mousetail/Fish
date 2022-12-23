@@ -169,7 +169,11 @@ const commands = {
         o.stacks[o.stacks.length - 1].contents.reverse();
     },
     'l': (o: ProgramState) => {
-        push(o, o.stacks[o.stacks.length - 1].contents.length)
+        if (o.stacks.length > 1) {
+            push(o, o.stacks[o.stacks.length - 1].contents.length)
+        } else {
+            o.stacks[0] = { contents: [], register: undefined };
+        }
     },
     '[': (o: ProgramState) => {
         let number = pop(o);
