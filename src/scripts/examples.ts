@@ -39,5 +39,9 @@ export let examples: ExampleProgram[] = [
     {
         name: "Maximum Average Ord",
         code: "00001.\n$i:\"!\"(?v+$1+\n:$@:$,$&/(@\nv?(0&~$?/|.!00\n\\n;"
+    },
+    {
+        name: "Inventory Sequence",
+        code: "0:1g:::n1g1+$1pao$:01-r?r-$~00."
     }
 ]
