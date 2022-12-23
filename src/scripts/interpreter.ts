@@ -169,11 +169,7 @@ const commands = {
         o.stacks[o.stacks.length - 1].contents.reverse();
     },
     'l': (o: ProgramState) => {
-        if (o.stacks.length > 1) {
-            push(o, o.stacks[o.stacks.length - 1].contents.length)
-        } else {
-            o.stacks[0] = { contents: [], register: undefined };
-        }
+        push(o, o.stacks[o.stacks.length - 1].contents.length)
     },
     '[': (o: ProgramState) => {
         let number = pop(o);
@@ -195,7 +191,7 @@ const commands = {
         if (last_stack !== undefined && o.stacks.length >= 1) {
             o.stacks[o.stacks.length - 1].contents = o.stacks[o.stacks.length - 1].contents.concat(last_stack.contents)
         } else {
-            throw new Error("No stack to pop")
+            o.stacks = [{ contents: [], register: undefined }];
         }
     },
 
