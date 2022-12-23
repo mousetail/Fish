@@ -77,19 +77,20 @@ export class PathDrawer {
                     if (width === 1) {
                         color = 'red';
                     } else if (width < 10) {
-                        color = `rgb(${lerp(1, 10, 0, 255, width)},${lerp(1, 10, 155, 0, width)},0)`;
+                        color = `rgb(${lerp(1, 10, 0, 155, width)},${lerp(1, 10, 155, 0, width)},0)`;
                     } else if (width < 25) {
-                        color = `rgb(0, 155, ${lerp(10, 25, 0, 255, width)})`
+                        color = `rgb(0, 155, ${lerp(10, 25, 0, 155, width)})`
                     }
                     else if (width < 100) {
-                        color = `rgb(0,${lerp(25, 100, 255, 0, width)},255)`;
+                        color = `rgb(0,${lerp(25, 100, 155, 0, width)},155)`;
                     } else {
-                        color = 'white';
+                        color = 'rgb(155,155,155)';
                     }
 
                     let path = document.createElementNS(svg_namespace, "path") as SVGPathElement;
                     path.setAttribute('stroke', color);
                     path.setAttribute('stroke-width', '0.5');
+                    path.setAttribute('fill', 'none');
                     path.setAttribute('d', `M ${x * 2 + path1[0]} ${y * 2 + path1[1]} Q ${x * 2} ${y * 2} ${x * 2 + path2[0]} ${y * 2 + path2[1]}`)
                     out.push(path);
                 }
