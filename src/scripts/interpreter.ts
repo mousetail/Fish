@@ -5,12 +5,12 @@ export interface Stack {
 
 export interface ProgramState {
     stacks: Stack[];
-    program: string[];
+    program: number[][];
     cursor: [number, number];
     cursor_direction: [number, number];
     input: () => number;
     output: (_: number) => void;
-    string_parsing_mode: undefined | string;
+    string_parsing_mode: undefined | number;
     stopped: boolean;
 }
 
@@ -135,10 +135,10 @@ const commands = {
         push(o, Number(pop(o) > pop(o)))
     },
     '\'': (o: ProgramState) => {
-        o.string_parsing_mode = '\''
+        o.string_parsing_mode = '\''.charCodeAt(0);
     },
     '"': (o: ProgramState) => {
-        o.string_parsing_mode = '"'
+        o.string_parsing_mode = '"'.charCodeAt(0);
     },
 
     // Stack Manipulation
@@ -224,7 +224,7 @@ const commands = {
         if (y < o.program.length && x < o.program[y].length) {
             push(
                 o,
-                o.program[y].charCodeAt(x)
+                o.program[y][x]
             )
         }
         else {
@@ -237,10 +237,13 @@ const commands = {
     'p': (o: ProgramState) => {
         let [y, x, v] = [pop(o), pop(o), pop(o)];
         while (o.program.length <= y) {
-            o.program.push('');
+            o.program.push([]);
         }
-        o.program[y] = o.program[y].padEnd(y + 1, '\x00');
-        o.program[y] = o.program[y].substring(0, x) + String.fromCharCode(v) + o.program[y].substring(x + 1);
+        while (o.program[y].length < x) {
+            o.program[y].push(0);
+        }
+        padProgram(o.program);
+        o.program[y][x] = v;
     },
     ';': (o: ProgramState) => {
         o.stopped = true;
@@ -250,12 +253,19 @@ const commands = {
 }
 
 export function step(o: ProgramState) {
-    let token = o.program[o.cursor[1]][o.cursor[0]] ?? '\x00';
+    let token_code: number = o.cursor[0] < o.program[o.cursor[1]].length ? o.program[o.cursor[1]][o.cursor[0]] ?? 0 : 0;
+
+    let token: string;
+    try {
+        token = String.fromCodePoint(token_code)
+    } catch {
+        token = '�'
+    }
     if (o.string_parsing_mode !== undefined) {
-        if (token === o.string_parsing_mode) {
+        if (token_code === o.string_parsing_mode) {
             o.string_parsing_mode = undefined
         } else {
-            push(o, token.charCodeAt(0));
+            push(o, token_code);
         }
     }
 
@@ -276,4 +286,17 @@ export function step(o: ProgramState) {
 
     o.cursor[0] = (o.cursor[0] + program_size[0]) % program_size[0];
     o.cursor[1] = (o.cursor[1] + program_size[1]) % program_size[1];
+}
+
+export function padProgram(program: number[][]) {
+    const program_size = [
+        program.reduce((a, b) => Math.max(a, b.length), 0),
+        program.length
+    ]
+    for (let row of program) {
+        while (row.length < program_size[0]) {
+            row.push(0);
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-import { step, ProgramState } from './interpreter';
+import { step, ProgramState, padProgram } from './interpreter';
 import { examples } from './examples';
 import { start_code_info_event_listeners } from './update_code_info';
 import { PathDrawer } from './gen_svg';
@@ -61,7 +61,19 @@ function load_data_from_hash() {
     }
 }
 
-function text_with_cursor(text: string[], cursor: [number, number]): (string | Node)[] {
+function format_char(char: number) {
+    if (char === 0 || char === 32) {
+        return ' '
+    } else if (char >= 33 && char % 1 == 0) {
+        return String.fromCodePoint(char)
+    } else {
+        return '�'
+    }
+}
+
+function text_with_cursor(program: number[][], cursor: [number, number]): (string | Node)[] {
+    let text = program.map(line => line.map(format_char).join(''))
+
     let text_before = text.slice(0, cursor[1]).map(i => i + '\n').join('') + text[cursor[1]].substring(0, cursor[0]);
     let text_after = text[cursor[1]].substring(cursor[0] + 1) + '\n' + text.slice(cursor[1] + 1).map(i => i + '\n').join('');
 
@@ -85,7 +97,7 @@ function update_ui_for_program(o: ProgramState) {
 
 let program_state: ProgramState = {
     stacks: [{ contents: [], register: undefined }],
-    program: ['a'],
+    program: [[32]],
     cursor: [0, 0],
     cursor_direction: [1, 0],
     string_parsing_mode: undefined,
@@ -110,7 +122,7 @@ function enable_editor() {
 function reset() {
     output_div.textContent = "";
 
-    let program = code_textarea.value.split('\n');
+    let program: number[][] = code_textarea.value.split('\n').map(i => [...i].map(j => j.codePointAt(0) as number));
     program_div.style.display = 'block';
     code_textarea.style.display = 'none';
     let longest_line = program.reduce((a, b) => Math.max(a, b.length), 0);
@@ -135,6 +147,8 @@ function reset() {
     }
 
     input_queue_div.textContent = initial_input.value;
+
+    padProgram(program);
 
     program_state = {
         stacks: [{ contents: initial_stack_values, register: undefined }],
