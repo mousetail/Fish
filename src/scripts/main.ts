@@ -2,6 +2,7 @@ import { step, ProgramState, padProgram } from './interpreter';
 import { examples } from './examples';
 import { start_code_info_event_listeners } from './update_code_info';
 import { PathDrawer } from './gen_svg';
+import { show_copy_dialog } from './copy_dialog';
 
 const play_button_label = "⏵ Start"
 const pause_button_label = "⏸︎ Pause"
@@ -274,6 +275,11 @@ numbers_button.addEventListener('click', () => {
 
     update_url_hash();
 })
+
+document.getElementById('copy')?.addEventListener('click',
+    () => {
+        show_copy_dialog(code_textarea.value);
+    })
 
 function update_url_hash() {
     let hash_value = JSON.stringify(
