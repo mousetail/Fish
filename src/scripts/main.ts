@@ -32,6 +32,7 @@ let started_task_id: number | undefined = undefined;
 let has_started = false;
 const path_drawer = new PathDrawer();
 let previous_blob: string | undefined = undefined;
+let url_data_loaded = false;
 
 const set_stack_format = init_tabs<'chars' | 'numbers'>(
     [
@@ -44,7 +45,7 @@ const set_stack_format = init_tabs<'chars' | 'numbers'>(
             value: 'numbers'
         }
     ],
-    (value) => stack_format = value,
+    (value) => { stack_format = value; update_url_hash() },
     'numbers'
 )
 
@@ -59,14 +60,14 @@ const set_input_format = init_tabs<'chars' | 'numbers'>(
             value: 'numbers'
         }
     ],
-    (value) => input_format = value,
+    (value) => { input_format = value; update_url_hash() },
     'chars'
 )
 
 
 function load_data_from_hash() {
+    url_data_loaded = true;
     if (window.location.hash) {
-
         let data;
         try {
             data = JSON.parse(
@@ -78,10 +79,13 @@ function load_data_from_hash() {
                 decodeURIComponent(window.location.hash.substring(1))
             )
         }
+
+        console.log("loading data from url", data);
         code_textarea.value = data.text;
         initial_input.value = data.input;
         initial_stack.value = data.stack;
-        set_stack_format(data.mode);
+        set_stack_format(data.stack_format ?? data.mode ?? 'numbers');
+        set_input_format(data.input_format ?? data.mode ?? 'chars');
     }
 }
 
@@ -292,22 +296,24 @@ document.getElementById('copy')?.addEventListener('click',
     })
 
 function update_url_hash() {
+    if (!url_data_loaded) {
+        return;
+    }
     let hash_value = JSON.stringify(
         {
             "text": code_textarea.value,
             "input": initial_input.value,
             "stack": initial_stack.value,
-            "mode": stack_format
+            "stack_format": stack_format,
+            "input_format": input_format
         }
     );
+
+    console.log("saved data in URL", hash_value);
 
     window.location.hash = '#' + btoa(hash_value);
     localStorage.setItem('last_program', hash_value);
 }
-
-code_textarea.addEventListener('change', update_url_hash);
-initial_input.addEventListener('change', update_url_hash);
-initial_stack.addEventListener('change', update_url_hash);
 
 for (let example of examples) {
     let option = document.createElement('option');
@@ -318,3 +324,7 @@ for (let example of examples) {
 
 load_data_from_hash();
 start_code_info_event_listeners(code_textarea);
+
+code_textarea.addEventListener('change', update_url_hash);
+initial_input.addEventListener('change', update_url_hash);
+initial_stack.addEventListener('change', update_url_hash);
