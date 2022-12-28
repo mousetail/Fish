@@ -4,6 +4,7 @@ import { start_code_info_event_listeners } from './update_code_info';
 import { PathDrawer } from './gen_svg';
 import { show_copy_dialog } from './copy_dialog';
 import { init_tabs } from './init_tabs';
+import { load_explanation } from './explanation_manager';
 
 const play_button_label = "⏵ Start"
 const pause_button_label = "⏸︎ Pause"
@@ -288,6 +289,7 @@ step_button.addEventListener(
 
 examples_select.addEventListener('change', () => {
     code_textarea.value = examples_select.value;
+    load_explanation(examples.find(i=>i.code===examples_select.value)!);
 })
 
 document.getElementById('copy')?.addEventListener('click',
