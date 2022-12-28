@@ -11,6 +11,7 @@
     "parcel": "^2.7.0"
   },
   "devDependencies": {
+    "@parcel/transformer-sass": "^2.7.0",
     "buffer": "^6.0.3"
   }
 }

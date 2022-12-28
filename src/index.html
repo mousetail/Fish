@@ -6,183 +6,7 @@
     <title>&gt;&lt;&gt; (Fish)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300&display=swap" rel="stylesheet">
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        hr {
-            margin: 1rem auto;
-            width: calc(100% - 4rem);
-        }
-
-        h1,
-        h2,
-        h3,
-        h4 {
-            margin-bottom: 0.5rem;
-        }
-
-        .pad {
-            padding: 0.25rem;
-        }
-
-        body {
-            font-family: 'DM Mono', monospace;
-            background-color: black;
-            color: white;
-
-            --disabled-color: #222;
-        }
-
-        .two-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .two-columns>div {
-            flex-grow: 1;
-        }
-
-        textarea:active,
-        textarea:focus,
-        textarea:focus-visible,
-        textarea:focus-within {
-            outline: none;
-        }
-
-        textarea,
-        #program {
-            width: calc(100% - 0.5rem);
-            font-size: 2rem;
-            padding: 0.25rem;
-            background-repeat: no-repeat;
-            background-size: contain;
-            line-height: 1em;
-            letter-spacing: 0.4em;
-            white-space: pre;
-        }
-
-        textarea,
-        input,
-        button,
-        select,
-        option {
-            padding: 0.25rem;
-            border-radius: 0;
-            background-color: transparent;
-            border: 1px solid grey;
-            margin: 0.25rem;
-            color: white;
-            appearance: none;
-            font-family: inherit;
-        }
-
-        option {
-            background-color: black;
-        }
-
-        button {
-            font-size: inherit;
-        }
-
-        select {
-            width: calc(100% - 0.5rem);
-        }
-
-        .box {
-            padding: 0.25rem;
-            margin: 0.25rem;
-            border: 1px solid darkgrey;
-            background-color: var(--disabled-color);
-            white-space: pre;
-            overflow: auto;
-            width: 0;
-            min-width: calc(100% - 0.5rem);
-        }
-
-        button:disabled {
-            color: grey;
-        }
-
-        button:hover:not(:disabled) {
-            color: black;
-            background-color: white;
-            border: 1px solid white;
-        }
-
-        .small-box {
-            min-height: 4rem;
-        }
-
-        .extra-small-box {
-            min-height: 2rem;
-        }
-
-        .code,
-        #program {
-            height: 22rem;
-        }
-
-        .program {
-            white-space: pre;
-        }
-
-        .cursor {
-            color: black;
-            background-color: white;
-        }
-
-        a {
-            color: white;
-        }
-
-        code {
-            background-color: #333;
-            padding: 0.2rem;
-            display: inline-block;
-        }
-
-        p {
-            margin: 0.2rem 0;
-        }
-
-        .cheat-sheet {
-            font-size: smaller;
-        }
-
-        .button-row {
-            display: flex;
-            vertical-align: middle;
-            align-items: center;
-        }
-
-        input[type="checkbox"] {
-            width: 2em;
-            height: 2em;
-            border: 1px solid grey;
-            display: block;
-            position: relative;
-        }
-
-        input[type="checkbox"]:checked {
-            /* Use `visibility` instead of `display` to avoid recalculating layout */
-            background-color: white;
-        }
-
-        .modal {
-            background-color: black;
-            border: 1px solid white;
-            position: fixed;
-            top: 1rem;
-            left: 1rem;
-            width: calc(100vw - 2rem);
-            padding: 1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="./style/style.scss">
 </head>
 
 <body class="pad">
@@ -207,22 +31,40 @@
             <div class="program box big-box" style="display: none;" id="program"></div>
 
             <div class="two-columns">
-                <div>
-                    <label>
+                <div class="flex">
+                    <label for="initial-stack">
                         Initial Stack:
-                        <input id="initial-stack">
                     </label>
-                    <button id="chars">
-                        Chars
-                    </button>
-                    <button id="numbers" disabled>
-                        Numbers
-                    </button>
+                    <div>
+                        <div class="flex">
+                            <button id="chars" class="tab">
+                                Chars
+                            </button>
+                            <button id="numbers" class="tab" disabled>
+                                Numbers
+                            </button>
+                            <div class="tab-filler"></div>
+                        </div>
+                        <input id="initial-stack" class="no-top">
+                    </div>
                 </div>
-                <label>
-                    Input:
-                    <input id="initial-input">
-                </label>
+                <div class="flex">
+                    <label>
+                        Input:
+                    </label>
+                    <div>
+                        <div class="flex">
+                            <button id="chars" class="tab">
+                                Chars
+                            </button>
+                            <button id="numbers" class="tab" disabled>
+                                Numbers
+                            </button>
+                            <div class="tab-filler"></div>
+                        </div>
+                        <input id="initial-input" class="no-top">
+                    </div>
+                </div>
             </div>
 
 

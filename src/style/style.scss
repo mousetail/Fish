@@ -1,0 +1,228 @@
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+hr {
+    margin: 1rem auto;
+    width: calc(100% - 4rem);
+}
+
+h1,
+h2,
+h3,
+h4 {
+    margin-bottom: 0.5rem;
+}
+
+.pad {
+    padding: 0.25rem;
+}
+
+body {
+    font-family: 'DM Mono', monospace;
+    background-color: black;
+    color: white;
+
+    --disabled-color: #222;
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.two-columns>div {
+    flex-grow: 1;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+textarea:active,
+textarea:focus,
+textarea:focus-visible,
+textarea:focus-within {
+    outline: none;
+}
+
+textarea,
+#program {
+    width: calc(100% - 0.5rem);
+    font-size: 2rem;
+    padding: 0.25rem;
+    background-repeat: no-repeat;
+    background-size: contain;
+    line-height: 1em;
+    letter-spacing: 0.4em;
+    white-space: pre;
+}
+
+textarea,
+input,
+button,
+select,
+option {
+    padding: 0.25rem;
+    border-radius: 0;
+    background-color: transparent;
+    border: 1px solid grey;
+    margin: 0.25rem;
+    color: white;
+    appearance: none;
+    font-family: inherit;
+}
+
+input {
+    width: 20rem;
+}
+
+.no-top {
+    margin-top: -0.35rem;
+    border-top: none;
+}
+
+option {
+    background-color: black;
+}
+
+button {
+    font-size: inherit;
+}
+
+select {
+    width: calc(100% - 0.5rem);
+}
+
+.box {
+    padding: 0.25rem;
+    margin: 0.25rem;
+    border: 1px solid darkgrey;
+    background-color: var(--disabled-color);
+    white-space: pre;
+    overflow: auto;
+    width: 0;
+    min-width: calc(100% - 0.5rem);
+}
+
+button:disabled {
+    color: grey;
+}
+
+button:hover:not(:disabled) {
+    color: black;
+    background-color: white;
+    border-color: white;
+}
+
+.small-box {
+    min-height: 4rem;
+}
+
+.extra-small-box {
+    min-height: 2rem;
+}
+
+.code,
+#program {
+    height: 22rem;
+}
+
+.program {
+    white-space: pre;
+}
+
+.cursor {
+    color: black;
+    background-color: white;
+}
+
+a {
+    color: white;
+}
+
+code {
+    background-color: #333;
+    padding: 0.2rem;
+    display: inline-block;
+}
+
+p {
+    margin: 0.2rem 0;
+}
+
+.cheat-sheet {
+    font-size: smaller;
+}
+
+.button-row {
+    display: flex;
+    vertical-align: middle;
+    align-items: center;
+}
+
+input[type="checkbox"] {
+    width: 2em;
+    height: 2em;
+    border: 1px solid grey;
+    display: block;
+    position: relative;
+}
+
+input[type="checkbox"]:checked {
+    /* Use `visibility` instead of `display` to avoid recalculating layout */
+    background-color: white;
+}
+
+.modal {
+    background-color: black;
+    border: 1px solid white;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    width: calc(100vw - 2rem);
+    padding: 1rem;
+}
+
+.tab {
+    padding: 0.21rem 1.31rem 0.21rem 0.75rem;
+    height: 1.5rem;
+    display: inline-block;
+    position: relative;
+    border: none;
+    border-left: 1px solid grey;
+    border-top: 1px solid grey;
+    margin-bottom: 0;
+    font-size: 13.333px;
+
+    &:after {
+        position: absolute;
+        right: -0.75rem;
+        content: "";
+        transform: skewX(45deg);
+        border-right: 1px solid grey;
+        border-top: 1px solid grey;
+        height: 1.5rem;
+        bottom: 0;
+        background-color: black;
+        width: 2rem;
+        z-index: 5;
+    }
+
+    &:not(:disabled):hover::after {
+        background-color: white;
+        border-color: white;
+    }
+}
+
+.tab-filler {
+    border-bottom: 1px solid grey;
+    flex-grow: 1;
+    height: 1.65rem;
+    margin-right: 0.25rem;
+}
