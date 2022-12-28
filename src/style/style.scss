@@ -80,6 +80,7 @@ option {
 
 input {
     width: 20rem;
+    outline: none;
 }
 
 .no-top {
@@ -199,6 +200,14 @@ input[type="checkbox"]:checked {
     border-top: 1px solid grey;
     margin-bottom: 0;
     font-size: 13.333px;
+
+    &:disabled {
+        color: white;
+    }
+
+    &:not(:disabled) {
+        color: grey;
+    }
 
     &:after {
         position: absolute;

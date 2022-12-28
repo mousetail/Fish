@@ -3,6 +3,7 @@ import { examples } from './examples';
 import { start_code_info_event_listeners } from './update_code_info';
 import { PathDrawer } from './gen_svg';
 import { show_copy_dialog } from './copy_dialog';
+import { init_tabs } from './init_tabs';
 
 const play_button_label = "⏵ Start"
 const pause_button_label = "⏸︎ Pause"
@@ -21,18 +22,47 @@ const start_button = document.getElementById('start') as HTMLButtonElement;
 const step_button = document.getElementById('step') as HTMLButtonElement;
 const reset_button = document.getElementById('reset') as HTMLButtonElement;
 
-const chars_button = document.getElementById('chars') as HTMLButtonElement;
-const numbers_button = document.getElementById('numbers') as HTMLButtonElement;
-
 const initial_stack = document.getElementById('initial-stack') as HTMLInputElement;
 const initial_input = document.getElementById('initial-input') as HTMLInputElement;
 const fast_forward_checkbox = document.getElementById('fast-forward') as HTMLInputElement;
 
-let input_mode: 'numbers' | 'chars' = 'numbers';
+let stack_format: 'numbers' | 'chars' = 'numbers';
+let input_format: 'numbers' | 'chars' = 'chars';
 let started_task_id: number | undefined = undefined;
 let has_started = false;
 const path_drawer = new PathDrawer();
 let previous_blob: string | undefined = undefined;
+
+const set_stack_format = init_tabs<'chars' | 'numbers'>(
+    [
+        {
+            id: 'stack-tab-chars',
+            value: 'chars'
+        },
+        {
+            id: 'stack-tab-numbers',
+            value: 'numbers'
+        }
+    ],
+    (value) => stack_format = value,
+    'numbers'
+)
+
+const set_input_format = init_tabs<'chars' | 'numbers'>(
+    [
+        {
+            id: 'input-tab-chars',
+            value: 'chars'
+        },
+        {
+            id: 'input-tab-numbers',
+            value: 'numbers'
+        }
+    ],
+    (value) => input_format = value,
+    'chars'
+)
+
 
 function load_data_from_hash() {
     if (window.location.hash) {
@@ -48,17 +78,10 @@ function load_data_from_hash() {
                 decodeURIComponent(window.location.hash.substring(1))
             )
         }
-        input_mode = data.mode;
-        if (input_mode == 'chars') {
-            chars_button.disabled = true;
-            numbers_button.disabled = false;
-        } else {
-            chars_button.disabled = false;
-            numbers_button.disabled = true;
-        }
         code_textarea.value = data.text;
         initial_input.value = data.input;
         initial_stack.value = data.stack;
+        set_stack_format(data.mode);
     }
 }
 
@@ -141,13 +164,14 @@ function reset() {
     code_textarea.style.fontSize = `${text_size}px`;
 
     let initial_stack_values: number[];
-    if (input_mode === 'chars' || initial_stack.value === "") {
+    if (stack_format === 'chars' || initial_stack.value === "") {
         initial_stack_values = [...initial_stack.value].map(i => i.charCodeAt(0));
     } else {
-        initial_stack_values = initial_stack.value.split(' ').map(i => Number.parseFloat(i));
+        initial_stack_values = initial_stack.value.split(' ').map(i => i.trim().replace(/,+$/, "")).filter(i => i).map(i => Number.parseFloat(i));
     }
 
-    input_queue_div.textContent = initial_input.value;
+    const input_queue = input_format === 'chars' ? [...initial_input.value].map(i => i.charCodeAt(0)) : initial_input.value.split(' ').map(i => Number.parseFloat(i));
+    input_queue_div.textContent = input_queue.join(' ');
 
     padProgram(program);
 
@@ -158,9 +182,11 @@ function reset() {
         cursor_direction: [1, 0],
         string_parsing_mode: undefined,
         input: () => {
-            let val = input_queue_div.textContent ?? "";
-            input_queue_div.textContent = val.substring(1);
-            return val ? val.charCodeAt(0) : -1;
+            input_queue.reverse();
+            let val = input_queue.pop() ?? -1;
+            input_queue.reverse();
+            input_queue_div.textContent = input_queue.join(' ');
+            return val;
         },
         output: (o: number) => {
             output_div.textContent += String.fromCharCode(o);
@@ -260,22 +286,6 @@ examples_select.addEventListener('change', () => {
     code_textarea.value = examples_select.value;
 })
 
-chars_button.addEventListener('click', () => {
-    input_mode = 'chars';
-    chars_button.disabled = true;
-    numbers_button.disabled = false;
-
-    update_url_hash();
-})
-
-numbers_button.addEventListener('click', () => {
-    input_mode = 'numbers';
-    chars_button.disabled = false;
-    numbers_button.disabled = true;
-
-    update_url_hash();
-})
-
 document.getElementById('copy')?.addEventListener('click',
     () => {
         show_copy_dialog(code_textarea.value);
@@ -287,7 +297,7 @@ function update_url_hash() {
             "text": code_textarea.value,
             "input": initial_input.value,
             "stack": initial_stack.value,
-            "mode": input_mode
+            "mode": stack_format
         }
     );
 
