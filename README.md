@@ -1,6 +1,6 @@
 # Fish
 
-Play with this at [https://mousetail.github.io/](https://mousetail.github.io/)
+Play with this at [https://mousetail.github.io/Fish](https://mousetail.github.io/Fish)
 
 A online interpreter for Fish: https://esolangs.org/wiki/Fish
 
