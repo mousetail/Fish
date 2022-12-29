@@ -59,20 +59,91 @@ export let examples: ExampleProgram[] = [
         Print a line break and restart the loop.<br>
         <code>'zziF'oooo/</code><br>
         Print "Fizz". We only reach this state if we are divisible by 3.<br>
-        <code>:0=?/</code>
+        <code>:0=?/</code><br>
         If we are also divisble by 5, go down then left, to the part of the code that already prints <code>Buzz</code>`
     },
     {
         name: "Fibonacci",
-        code: "10::n' 'o&+&$10."
+        code: "10::n' 'o&+&$10.",
+        explanation: `<h3>Fibonacci<h3>
+        <p>
+        The fibonochi sequence starts with 0 1. Then each subsequent value is the sum of the previous 2 values.
+        <a href="https://en.wikipedia.org/wiki/Fibonacci_number">Learn more about the sequence on wikipedia</a>
+        </p>
+
+        <p>This program will infinitly print the elements of the sequence, or at least until numerical limits are exceeded. (Fish uses 64-bit floating points)</p>
+
+        <code>10</code><br>
+        Push the first 2 elements to the stack. This means the first element is last on the stack and the next is second to last.<br>
+
+        <code>::n</code><br>
+        Copy the last element of the sequence twice print it<br>
+
+        <code>' 'o</code><br>
+        Print a space<br>
+
+        <code>&+&</code><br>
+        This temporairly moves the top element of the stack to the register.<br>
+
+        <code>$</code><br>
+        Swap the 2 elements of the stack. This leaves the next item on the top and the one after at the bottom.
+
+        <code>10.</code><br>
+        This will jump to the coordinates <code>1,0</code>. However, since the cursor will immediatly move one step after jumpting the first executed instruction will actually be <code>2, 0</code>. This restarts the loop.<br>
+        `
     },
     {
         name: "Lucas",
-        code: "2n' 'ol?/21>::!\n    $&+&\\  /"
+        code: "2n' 'ol?/21>::!\n    $&+&\\  /",
+        explanation: `
+        <h3>The Lukas Sequence</h3>
+        <p>The lukas sequence, like the Fibonacci sequence, has the property that <code>L(x) = L(x-1) + L(x-2)</code>. However, unlike Fibonacci it starts with <code>2, 1</code>.
+        <a href="https://en.wikipedia.org/wiki/Lucas_number">Learn more about Lukas numbers on Wikipedia</a></p>
+        <p>This code will infintly print elements of the Lukas sequence. While it would be possible to use the same kind of program as Fibbonacci this uses a different approach.</p>
+
+        <code>2n</code><br>
+        Print the number "2"<br>
+        <code>' 'o</code><br>
+        Print a space.<br>
+        <code>l?/<code><br>
+        If the stack has at least one element, go up. Since the stack has only 2 elements this effectively wraps around to be the same as going down.<br>
+        <code>21&gt;</code>
+        If the stack is empty, push <code>2, 1</code> to the stack, then go right<br>
+        <code>&+&</code><br>
+        Add the second and third items of the stack, using the register to temporairly  hold the first<br>
+        <code>$</code><br>
+        Swap the top of the stack, thus moving the sum to the top and the previous first item down.<br>
+        <code>/</code><br>
+        Move down, of effectively up.<br>
+        <code>&gt;::!</code><br>
+        Make sure the direction is right. If so duplicate the top of the stack twice. Then <code>!<code>skips the next intruction which would be the <code>2</code>,
+        thus printing the number then going to the space printing part.<br>
+
+        `
     },
     {
         name: "Factorial",
-        code: " :?\\~11>*l1\\\n-1:/ ;n\\?- /"
+        code: " :?\\~11>*l1\\\n-1:/ ;n\\?- /",
+        explanation: `<h3>The Factorial Function</h3>
+        <p>The factorial of a number is defined as the product of all numbers 1 to N. <a href="https://en.wikipedia.org/wiki/Factorial">Learn more about factorial numbers on Wikipedia</a>
+
+        <p>This computes the factorial of a number entered via the "initial stack" option.<p>
+
+        <code>:?\</code><br>
+        If the number is not 0, go down</code>
+
+        <code>:1-</code><br>
+        If the input is not 0, Push the number -1 to the stack.<br>
+        </code>~11</code>
+        If the input <i>is</i> 0, delete the input and push <code>11</code>instead.<br>
+        <code>/\</code>
+        If the input was <i>not</i>0, jump to the start. We try again starting from <code>n-1</code>. The number may now have become 0.<br>
+        <code>*l1-?</code>
+        If the last number <i>was</i>0, the 0 has been popped. So we multiply the top 2 elemnents of the stack. Then theck if the length is 2 or greater. If so,
+        repeat the multiplication.<br>
+        <code>n;</code>
+        If only 1 element is left, we print it and exit<br>
+        `
     },
     {
         name: "Quine",
