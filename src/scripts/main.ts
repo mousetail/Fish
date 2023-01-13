@@ -236,10 +236,15 @@ function step_and_update() {
 start_button.addEventListener(
     'click', () => {
         if (started_task_id === undefined) {
+            if (!has_started) {
+                reset();
+                has_started = true;
+            }
+
             started_task_id = setInterval(() => {
                 let iteration = fast_forward_checkbox.checked ? 5 : 1;
                 for (let i = 0; i < iteration; i++) {
-                    if (!program_state.stopped){
+                    if (!program_state.stopped) {
                         step_and_update();
                     }
                 }
@@ -291,7 +296,7 @@ step_button.addEventListener(
 
 examples_select.addEventListener('change', () => {
     code_textarea.value = examples_select.value;
-    load_explanation(examples.find(i=>i.code===examples_select.value)!);
+    load_explanation(examples.find(i => i.code === examples_select.value)!);
 })
 
 document.getElementById('copy')?.addEventListener('click',
