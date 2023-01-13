@@ -238,7 +238,7 @@ function step_and_update() {
 start_button.addEventListener(
     'click', () => {
         if (started_task_id === undefined) {
-            if (!has_started) {
+            if (!has_started || program_state.stopped) {
                 reset();
                 has_started = true;
             }
