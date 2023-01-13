@@ -246,8 +246,9 @@ start_button.addEventListener(
             started_task_id = setInterval(() => {
                 let iteration = fast_forward_checkbox.checked ? 5 : 1;
                 for (let i = 0; i < iteration; i++) {
-                    if (!program_state.stopped) {
-                        step_and_update();
+                    step_and_update();
+                    if (program_state.stopped) {
+                        break;
                     }
                 }
             }, 128);
