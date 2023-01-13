@@ -1,4 +1,4 @@
-function createInput(value: string): HTMLDivElement {
+function createInput(value: string, dialog: HTMLDivElement): HTMLDivElement {
     let div = document.createElement('div');
     div.classList.add('button-row');
     let link_input = document.createElement('textarea');
@@ -17,7 +17,7 @@ function createInput(value: string): HTMLDivElement {
     copy_link.addEventListener('click', () => {
         link_input.focus();
         link_input.select();
-        console.log("Copying is ", document.execCommand('copy'));
+        document.body.removeChild(dialog);
     });
 
 
@@ -35,10 +35,10 @@ export function show_copy_dialog(code_text: string) {
     dialog.classList.add('modal');
 
     dialog.appendChild(createHeader('Link'));
-    dialog.appendChild(createInput(window.location.href));
+    dialog.appendChild(createInput(window.location.href, dialog));
 
     dialog.appendChild(createHeader('Code'));
-    dialog.appendChild(createInput(code_text));
+    dialog.appendChild(createInput(code_text, dialog));
 
     let encoded_text = new TextEncoder().encode(code_text);
 
@@ -51,7 +51,7 @@ ${code_text}
 
 [Try it](${window.location.href})
 
-    `));
+    `, dialog));
 
     let close_button = document.createElement('button');
     close_button.innerText = 'close';
