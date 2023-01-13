@@ -230,6 +230,8 @@ function step_and_update() {
         console.log("Program ended, started_task_id = ", started_task_id);
         generateBackgroundImage();
         end_update_loop_if_active();
+        enable_editor();
+        path_drawer.reset();
     }
 }
 
