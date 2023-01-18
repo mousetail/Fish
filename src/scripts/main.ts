@@ -72,11 +72,10 @@ function load_data_from_hash() {
         let data;
         try {
             const hash_decoded = atob(window.location.hash.substring(1));
-            console.log(hash_decoded);
 
             data = JSON.parse(
                 new TextDecoder('utf-8').decode(
-                    Uint8Array.from({ length: hash_decoded.length }, (element, index) => hash_decoded.charCodeAt(index))
+                    Uint8Array.from({ length: hash_decoded.length }, (_element, index) => hash_decoded.charCodeAt(index))
                 )
             )
         } catch (ex) {
