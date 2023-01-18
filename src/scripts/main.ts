@@ -71,10 +71,16 @@ function load_data_from_hash() {
     if (window.location.hash) {
         let data;
         try {
+            const hash_decoded = atob(window.location.hash.substring(1));
+            console.log(hash_decoded);
+
             data = JSON.parse(
-                atob(window.location.hash.substring(1))
+                new TextDecoder('utf-8').decode(
+                    Uint8Array.from({ length: hash_decoded.length }, (element, index) => hash_decoded.charCodeAt(index))
+                )
             )
-        } catch {
+        } catch (ex) {
+            console.error(ex)
             // Fallback to old version
             data = JSON.parse(
                 decodeURIComponent(window.location.hash.substring(1))
@@ -203,12 +209,6 @@ function reset() {
 }
 
 function step_and_update() {
-    if (!has_started) {
-        console.log("Program has not yet started, resetting");
-        reset();
-        has_started = true;
-    }
-
     if (!program_state.stopped) {
         try {
             step(program_state);
@@ -293,6 +293,10 @@ reset_button.addEventListener(
 step_button.addEventListener(
     'click', () => {
         end_update_loop_if_active();
+        if (!has_started) {
+            reset();
+            has_started = true;
+        }
         step_and_update();
     }
 )
@@ -323,7 +327,7 @@ function update_url_hash() {
 
     console.log("saved data in URL", hash_value);
 
-    window.location.hash = '#' + btoa(hash_value);
+    window.location.hash = '#' + btoa(String.fromCharCode(...new TextEncoder().encode(hash_value)));
     localStorage.setItem('last_program', hash_value);
 }
 
