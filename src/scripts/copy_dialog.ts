@@ -17,7 +17,12 @@ function createInput(value: string, dialog: HTMLDivElement): HTMLDivElement {
     copy_link.addEventListener('click', () => {
         link_input.focus();
         link_input.select();
-        document.body.removeChild(dialog);
+        document.execCommand('copy');
+
+        setTimeout(
+            () => document.body.removeChild(dialog),
+            10
+        );
     });
 
 
