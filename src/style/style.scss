@@ -235,3 +235,12 @@ input[type="checkbox"]:checked {
     height: 1.65rem;
     margin-right: 0.25rem;
 }
+
+.highlight {
+    background-color: #aa0;
+    color: black;
+
+    code {
+        background-color: #880;
+    }
+}

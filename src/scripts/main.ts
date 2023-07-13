@@ -70,6 +70,18 @@ function load_data_from_hash() {
     url_data_loaded = true;
     if (window.location.hash) {
         let data;
+
+        if (window.location.hash.length === 2) {
+            const i = window.location.hash[1];
+            const titleElement = i != '\n' && document.querySelector(`code[data-symbol*="${i.replace('\\', '\\\\').replace('"', '\\"')}"]`);
+            if (titleElement) {
+                titleElement.parentElement?.classList.add('highlight');
+            }
+            code_textarea.value = 'ii' + i + 'n';
+            initial_input.value = 'AB';
+            return;
+        }
+
         try {
             const hash_decoded = atob(window.location.hash.substring(1));
 
