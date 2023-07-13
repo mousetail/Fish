@@ -127,43 +127,46 @@
 
                 <div class="two-columns">
                     <div>
-                        <p><code><>^v</code> Change Cursor Direction</p>
+                        <p><code data-symbol="&gt;&lt;^>">&lt;&gt;^v</code> Change Cursor Direction</p>
                     </div>
                     <div>
-                        <p><code>/\|-#</code> Mirrors</p>
+                        <p><code data-symbol="\/|_#">/\|_#</code> Mirrors</p>
                     </div>
                 </div>
 
-                <p><code>x</code> Random Direction</p>
+                <p><code data-symbol="x">x</code> Random Direction</p>
 
-                <p><code>!</code> Skip the next instruction, moving 2 spaces instead of 1</p>
+                <p><code data-symbol="!">!</code> Skip the next instruction, moving 2 spaces instead of 1</p>
 
-                <p><code>?</code> Pop 1 value of the stack, if it's 0 skip the next instruction and move forward 2
+                <p><code data-symbol="?">?</code> Pop 1 value of the stack, if it's 0 skip the next instruction and move
+                    forward 2
                     spaces.
                 </p>
 
-                <p><code>.</code> Pop 2 values of the stack then move to that position.</p>
+                <p><code data-symbol=".">.</code> Pop 2 values of the stack then move to that position.</p>
 
                 <h3>Literals</h3>
 
                 <div class="two-columns">
                     <div>
-                        <p><code>0123456789</code> Push the number (0-9)</p>
+                        <p><code data-symbol="0123456789">0123456789</code> Push the number (0-9)</p>
                     </div>
                     <div>
-                        <p><code>abcdef</code> Push the hexadecimal (10-15)</p>
+                        <p><code data-symbol="abcdef">abcdef</code> Push the hexadecimal (10-15)</p>
                     </div>
                 </div>
 
-                <p><code>+-*%</code> Pop 2 values of the stack then perform the given operation.</p>
+                <p><code data-symbol="+-*%">+-*%</code> Pop 2 values of the stack then perform the given operation.</p>
 
-                <p><code>,</code> Divide the top 2 values of the stack.</p>
+                <p><code data-symbol=",">,</code> Divide the top 2 values of the stack.</p>
 
-                <p><code>=</code> Pop 2 values of the stack, push 1 if they are equal and 0 otherwise</p>
+                <p><code data-symbol="=">=</code> Pop 2 values of the stack, push 1 if they are equal and 0 otherwise
+                </p>
 
-                <p><code>)(</code> Greater than, less than. Push 1 or 0 to the stack.</p>
+                <p><code data-symbol=")(">)(</code> Greater than, less than. Push 1 or 0 to the stack.</p>
 
-                <p><code>'"</code> Enable or disable string parsing mode. In string parsing mode all characters are
+                <p><code data-symbol="'&quot;">'" </code> Enable or disable string parsing mode. In string parsing mode
+                    all characters are
                     pushed
                     to the stack instead of executed.</p>
 
@@ -171,51 +174,58 @@
 
                 <div class="two-columns">
                     <div>
-                        <p><code>:</code> Duplicate the top item on the stack</p>
-                        <p><code>$</code> Move the top element of the stack back 1</p>
+                        <p><code data-symbol=":">:</code> Duplicate the top item on the stack</p>
+                        <p><code data-symbol="$">$</code> Move the top element of the stack back 1</p>
                     </div>
                     <div>
-                        <p><code>~</code> Delete the top element of the stack</p>
-                        <p><code>@</code> Move the top elemnt of the stack back 2</p>
+                        <p><code data-symbol="~">~</code> Delete the top element of the stack</p>
+                        <p><code data-symbol="@">@</code> Move the top elemnt of the stack back 2</p>
                     </div>
                 </div>
 
-                <p><code>{}</code> Shifts the entire stack left or right</p>
+                <p><code data-symbol="{}">{}</code> Shifts the entire stack left or right</p>
 
-                <p><code>r</code> Reverse the stack</p>
+                <p><code data-symbol="r">r</code> Reverse the stack</p>
 
-                <p><code>l</code> Push the length of the stack to the stack</p>
+                <p><code data-symbol="l">l</code> Push the length of the stack to the stack</p>
 
-                <p><code>[</code> Pop N from the stack, then create a new stack containing the top N elements of the old
+                <p><code data-symbol="[">[</code> Pop N from the stack, then create a new stack containing the top N
+                    elements of
+                    the old
                     stack.</p>
 
-                <p><code>]</code> Go back to the previous stack, adding all elements of the top stack back to it.</p>
+                <p><code data-symbol="]">]</code> Go back to the previous stack, adding all elements of the top stack
+                    back to
+                    it.</p>
 
                 <h3>IO</h3>
 
                 <div class="two-columns">
                     <div>
-                        <p><code>o</code> output a character</p>
+                        <p><code data-symbol="o">o</code> output a character</p>
                     </div>
                     <div>
-                        <p><code>n</code> output a number in decimal</p>
+                        <p><code data-symbol="n">n</code> output a number in decimal</p>
                     </div>
                 </div>
-                <p><code>i</code> read a character</p>
+                <p><code data-symbol="i">i</code> read a character</p>
 
                 <h3>Other</h3>
 
-                <p><code>&</code> If the register is empty, pop the top element of the stack and move it to the
+                <p><code data-symbol="&">&</code> If the register is empty, pop the top element of the stack and move it
+                    to the
                     register.
                     Else push the value of the register to the stack.</p>
 
-                <p><code>g</code> Pop the top 2 elements then push the code value at that position</p>
+                <p><code data-symbol="g">g</code> Pop the top 2 elements then push the code value at that position</p>
 
-                <p><code>p</code> Pop a postion and a value from the stack, then write the character to that position in
+                <p><code data-symbol="p">p</code> Pop a postion and a value from the stack, then write the character to
+                    that
+                    position in
                     the
                     code.</p>
 
-                <p><code>;</code> Halt</p>
+                <p><code data-symbol=";">;</code> Halt</p>
             </div>
             <div id="tab-content-example" class="pad">
 

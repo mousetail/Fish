@@ -35,6 +35,27 @@ function createHeader(text: string): HTMLHeadingElement {
     return header;
 }
 
+function escapeHTML(text: string): string {
+    let div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function format_code_text(codeText: string) {
+    return [...codeText].map(i => {
+        const titleElement = i != '\n' && document.querySelector(`code[data-symbol*="${i.replace('\\', '\\\\').replace('"', '\\"')}"]`);
+        if (titleElement) {
+            const title = (titleElement.nextSibling?.textContent?.trim() ?? '').replace(/\s+/g, ' ');
+            return `<a href="https://mousetail.github.io/fish#${escapeHTML(encodeURIComponent(i))
+                }" title="${escapeHTML(title ?? '')
+                }">${escapeHTML(i)
+                }</a>`
+        } else {
+            return i;
+        }
+    }).join('')
+}
+
 export function show_copy_dialog(code_text: string) {
     let dialog = document.createElement('div');
     dialog.classList.add('modal');
@@ -50,13 +71,13 @@ export function show_copy_dialog(code_text: string) {
     dialog.appendChild(createHeader('CGSE Post'));
     dialog.appendChild(createInput(`# [><> (Fish)](https://esolangs.org/wiki/Fish), ${encoded_text.length} bytes
 
-`+ "```" + `
-${code_text}
-`+ "```" + `
+`+ "<pre>" + `
+${format_code_text(code_text)}
+`+ "</pre>\n<sup>However over any symbol to see what it does</sup>\n" + `
 
 [Try it](${window.location.href})
 
-    `, dialog));
+    `.trim(), dialog));
 
     let close_button = document.createElement('button');
     close_button.innerText = 'close';
