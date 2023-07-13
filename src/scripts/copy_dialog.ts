@@ -46,7 +46,7 @@ function format_code_text(codeText: string) {
         const titleElement = i != '\n' && document.querySelector(`code[data-symbol*="${i.replace('\\', '\\\\').replace('"', '\\"')}"]`);
         if (titleElement) {
             const title = (titleElement.nextSibling?.textContent?.trim() ?? '').replace(/\s+/g, ' ');
-            return `<a href="https://mousetail.github.io/fish#${escapeHTML(encodeURIComponent(i))
+            return `<a href="https://mousetail.github.io/Fish/#${escapeHTML(encodeURIComponent(i))
                 }" title="${escapeHTML(title ?? '')
                 }">${escapeHTML(i)
                 }</a>`
@@ -73,7 +73,7 @@ export function show_copy_dialog(code_text: string) {
 
 `+ "<pre>" + `
 ${format_code_text(code_text)}
-`+ "</pre>\n<sup>However over any symbol to see what it does</sup>\n" + `
+`+ "</pre>\n<sup>Hover over any symbol to see what it does</sup>\n\n" + `
 
 [Try it](${window.location.href})
 
