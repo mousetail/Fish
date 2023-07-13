@@ -46,7 +46,7 @@ function format_code_text(codeText: string) {
         const titleElement = i != '\n' && document.querySelector(`code[data-symbol*="${i.replace('\\', '\\\\').replace('"', '\\"')}"]`);
         if (titleElement) {
             const title = (titleElement.nextSibling?.textContent?.trim() ?? '').replace(/\s+/g, ' ');
-            return `<img src="https://." alt="${escapeHTML(i)}" title="${escapeHTML(title)}">`
+            return `<img src="https://$" alt="${escapeHTML(i)}" title="${escapeHTML(title)}">`
         } else {
             return i;
         }
