@@ -71,8 +71,8 @@ function load_data_from_hash() {
     if (window.location.hash) {
         let data;
 
-        if (window.location.hash.length === 2) {
-            const i = window.location.hash[1];
+        if (window.location.hash.length <= 5) {
+            const i = decodeURIComponent(window.location.hash.substring(1));
             const titleElement = i != '\n' && document.querySelector(`code[data-symbol*="${i.replace('\\', '\\\\').replace('"', '\\"')}"]`);
             if (titleElement) {
                 titleElement.parentElement?.classList.add('highlight');
