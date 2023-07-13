@@ -46,10 +46,7 @@ function format_code_text(codeText: string) {
         const titleElement = i != '\n' && document.querySelector(`code[data-symbol*="${i.replace('\\', '\\\\').replace('"', '\\"')}"]`);
         if (titleElement) {
             const title = (titleElement.nextSibling?.textContent?.trim() ?? '').replace(/\s+/g, ' ');
-            return `<a href="https://mousetail.github.io/Fish/#${escapeHTML(encodeURIComponent(i))
-                }" title="${escapeHTML(title ?? '')
-                }">${escapeHTML(i)
-                }</a>`
+            return `<img src="https://." alt="${escapeHTML(i)}" title="${escapeHTML(title)}">`
         } else {
             return i;
         }
