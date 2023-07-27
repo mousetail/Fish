@@ -124,7 +124,7 @@ const commands = {
     '*': wrap((a, b) => a * b),
     '-': wrap((a, b) => b - a),
     ',': wrap((a, b) => b / a),
-    '%': wrap((a, b) => b % a),
+    '%': wrap((a, b) => ((b % a) + a) % a),
     '=': (o: ProgramState) => {
         push(o, Number(pop(o) == pop(o)))
     },
@@ -158,12 +158,16 @@ const commands = {
         push(o, x); push(o, z); push(o, y);
     },
     '{': (o: ProgramState) => {
-        let a = o.stacks[o.stacks.length - 1].contents.shift();
-        push(o, a as number);
+        if (o.stacks[o.stacks.length -1].contents.length > 0) {
+            let a = o.stacks[o.stacks.length - 1].contents.shift();
+            push(o, a as number);
+        }
     },
     '}': (o: ProgramState) => {
-        let a = o.stacks[o.stacks.length - 1].contents.pop();
-        o.stacks[o.stacks.length - 1].contents.unshift(a as number);
+        if (o.stacks[o.stacks.length -1].contents.length > 0) {
+            let a = o.stacks[o.stacks.length - 1].contents.pop();
+            o.stacks[o.stacks.length - 1].contents.unshift(a as number);
+        }
     },
     'r': (o: ProgramState) => {
         o.stacks[o.stacks.length - 1].contents.reverse();
@@ -221,6 +225,13 @@ const commands = {
     },
     'g': (o: ProgramState) => {
         let [y, x] = [pop(o), pop(o)];
+        if (x < 0) {
+            x = 0;
+        }
+        if (y < 0) {
+            y = 0;
+        }
+
         if (y < o.program.length && x < o.program[y].length) {
             push(
                 o,
