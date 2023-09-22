@@ -14,4 +14,10 @@ A online interpreter for Fish: https://esolangs.org/wiki/Fish
 
 * `parcel src/index.html` (or `npx parcel src/index.html`)
 
+## Running locally (as a container)
 
+* `docker build -t fish .`
+
+* `docker create -p 1234:1234 --name fish fish`
+
+* `docker start fish`
