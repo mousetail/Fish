@@ -1,4 +1,4 @@
-import { step, ProgramState, padProgram } from './interpreter';
+import { step, ProgramState } from './interpreter';
 import { examples } from './examples';
 import { start_code_info_event_listeners } from './update_code_info';
 import { PathDrawer } from './gen_svg';
@@ -194,8 +194,6 @@ function reset() {
 
     const input_queue = input_format === 'chars' ? [...initial_input.value].map(i => i.charCodeAt(0)) : initial_input.value.split(' ').map(i => Number.parseFloat(i));
     input_queue_div.textContent = input_queue.join(' ');
-
-    padProgram(program);
 
     program_state = {
         stacks: [{ contents: initial_stack_values, register: undefined }],
