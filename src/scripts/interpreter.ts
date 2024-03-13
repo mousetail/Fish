@@ -242,7 +242,6 @@ const commands = {
         while (o.program[y].length < x) {
             o.program[y].push(0);
         }
-        padProgram(o.program);
         o.program[y][x] = v;
     },
     ';': (o: ProgramState) => {
@@ -284,19 +283,6 @@ export function step(o: ProgramState) {
         o.program.length
     ]
 
-    o.cursor[0] = (o.cursor[0] + program_size[0]) % program_size[0];
-    o.cursor[1] = (o.cursor[1] + program_size[1]) % program_size[1];
-}
-
-export function padProgram(program: number[][]) {
-    const program_size = [
-        program.reduce((a, b) => Math.max(a, b.length), 0),
-        program.length
-    ]
-    for (let row of program) {
-        while (row.length < program_size[0]) {
-            row.push(0);
-        }
-    }
-
+    o.cursor[1] = (o.cursor[1] + o.program.length[1]) % o.program.length[1];
+    o.cursor[0] = (o.cursor[0] + o.program[o.cursor[1]].length) % o.program[o.cursor[1]].length;
 }
