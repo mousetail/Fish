@@ -271,15 +271,17 @@ start_button.addEventListener(
 )
 
 function generateBackgroundImage() {
-    let svg = path_drawer.gen_svg(program_state.program.map(i=>i.length).reduce((a,b)=>Math.max(a,b)), program_state.program.length);
+    const svgWidth = program_state.program.map(i=>i.length).reduce((a,b)=>Math.max(a,b))
+
+    let svg = path_drawer.gen_svg(svgWidth, program_state.program.length);
     let svg_source = '<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="' + svg.getAttribute('viewBox')
         + '">' + svg.innerHTML + "</svg>";
 
     const blob = URL.createObjectURL(new Blob([svg_source], { type: "image/svg+xml" }));
     code_textarea.style.backgroundImage = 'url("' + blob + '")';
-    code_textarea.style.backgroundSize = (12 / 12) * program_state.program[0].length + 'em';
+    code_textarea.style.backgroundSize = (12 / 12) * svgWidth + 'em';
     program_div.style.backgroundImage = 'url("' + blob + '")';
-    program_div.style.backgroundSize = (12 / 12) * program_state.program[0].length + 'em';
+    program_div.style.backgroundSize = (12 / 12) * svgWidth + 'em';
 
     if (previous_blob !== undefined) {
         URL.revokeObjectURL(previous_blob);
