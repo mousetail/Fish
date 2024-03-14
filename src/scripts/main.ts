@@ -271,7 +271,7 @@ start_button.addEventListener(
 )
 
 function generateBackgroundImage() {
-    let svg = path_drawer.gen_svg(program_state.program[0].length, program_state.program.length);
+    let svg = path_drawer.gen_svg(program_state.program.map(i=>i.length).reduce((a,b)=>Math.max(a,b)), program_state.program.length);
     let svg_source = '<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" viewBox="' + svg.getAttribute('viewBox')
         + '">' + svg.innerHTML + "</svg>";
 
