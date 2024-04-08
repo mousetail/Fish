@@ -286,9 +286,18 @@ export function step(o: ProgramState) {
     } else {
         throw new Error("Unexpected token: " + token + " Note: all symbols must be lower case");
     }
-    o.cursor[0] += o.cursor_direction[0];
-    o.cursor[1] += o.cursor_direction[1];
 
-    o.cursor[1] = (o.cursor[1] + o.program.length) % o.program.length;
-    o.cursor[0] = (o.cursor[0] + o.program[o.cursor[1]].length) % o.program[o.cursor[1]].length;
+    if (o.cursor_direction[0] != 0) {
+        o.cursor[0] += o.cursor_direction[0];
+
+        const row_length = o.program[o.cursor[1]].length;
+        if (row_length != 0) {
+            o.cursor[0] = (o.cursor[0] + row_length) % row_length;
+        }
+    }
+
+    if (o.cursor_direction[1] != 0) {
+        o.cursor[1] += o.cursor_direction[1];
+        o.cursor[1] = (o.cursor[1] + o.program.length) % o.program.length;
+    }
 }

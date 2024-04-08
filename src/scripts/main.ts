@@ -123,8 +123,11 @@ function text_with_cursor(program: number[][], cursor: [number, number]): (strin
     let text_before = text.slice(0, cursor[1]).map(i => i + '\n').join('') + text[cursor[1]].substring(0, cursor[0]);
     let text_after = text[cursor[1]].substring(cursor[0] + 1) + '\n' + text.slice(cursor[1] + 1).map(i => i + '\n').join('');
 
+    let cursor_content = text[cursor[1]][cursor[0]];
     let span = document.createElement('span');
-    span.innerText = text[cursor[1]][cursor[0]];
+    if (cursor_content != undefined) {
+        span.innerText = cursor_content;
+    }
     span.classList.add('cursor');
     return [
         text_before,
