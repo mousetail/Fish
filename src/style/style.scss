@@ -42,6 +42,7 @@ body {
 .flex {
     display: flex;
     align-items: center;
+    gap: 0.25rem;
 }
 
 textarea:active,
@@ -242,5 +243,23 @@ input[type="checkbox"]:checked {
 
     code {
         background-color: #880;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.radio-row {
+    border: 1px solid grey;
+    display: flex;
+
+    label {
+        display: block;
+        padding: 0.25rem;
+    }
+
+    input[type="radio"]:checked+label {
+        background-color: gray;
     }
 }

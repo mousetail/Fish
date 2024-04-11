@@ -1,4 +1,4 @@
-interface NumberImplementation<T> {
+export interface NumberImplementation<T> {
     add(self: T, other: T): T;
     sub(self: T, other: T): T;
     mul(self: T, other: T): T;
@@ -16,9 +16,12 @@ interface NumberImplementation<T> {
     eq(self: T, other: T): T;
     lt(self: T, other: T): T;
     gt(self: T, other: T): T;
+
+    toString(self: T): string;
+    isTruthy(self: T): boolean;
 }
 
-type Rational = {
+export type Rational = {
     numerator: number,
     denomonator: number
 }
@@ -39,7 +42,7 @@ function reduce(rational: Rational): Rational {
     }
 }
 
-const FloatingPointNumberImplementation: NumberImplementation<number> = {
+export const FloatingPointNumberImplementation: NumberImplementation<number> = {
     add: function (self: number, other: number): number {
         return self + other;
     },
@@ -71,26 +74,32 @@ const FloatingPointNumberImplementation: NumberImplementation<number> = {
         return d;
     },
     eq: function (self: number, other: number): number {
-        throw (self == other) ? 1 : 0;
+        return (self == other) ? 1 : 0;
     },
     lt: function (self: number, other: number): number {
-        throw (self < other) ? 1 : 0;
+        return (self < other) ? 1 : 0;
     },
     gt: function (self: number, other: number): number {
-        throw (self > other) ? 1 : 0;
+        return (self > other) ? 1 : 0;
+    },
+    toString(self: number): string {
+        return "" + self;
+    },
+    isTruthy: function (self: number): boolean {
+        return self != 0;
     }
 }
 
-const RationalNumberImplementation: NumberImplementation<Rational> = {
+export const RationalNumberImplementation: NumberImplementation<Rational> = {
     add: function (self: Rational, other: Rational): Rational {
         return reduce({
-            numerator: self.numerator * other.denomonator + other.denomonator * self.numerator,
+            numerator: self.numerator * other.denomonator + other.numerator * self.denomonator,
             denomonator: self.denomonator * other.denomonator
         });
     },
     sub: function (self: Rational, other: Rational): Rational {
         return reduce({
-            numerator: self.numerator * other.denomonator - other.denomonator * self.numerator,
+            numerator: self.numerator * other.denomonator - other.numerator * self.denomonator,
             denomonator: self.denomonator * other.denomonator
         });
     },
@@ -108,7 +117,7 @@ const RationalNumberImplementation: NumberImplementation<Rational> = {
     },
     mod: function (self: Rational, other: Rational): Rational {
         return reduce({
-            numerator: self.numerator * other.denomonator % other.denomonator * self.numerator,
+            numerator: (self.numerator * other.denomonator) % (other.numerator * self.denomonator),
             denomonator: self.denomonator * other.denomonator
         });
     },
@@ -116,10 +125,10 @@ const RationalNumberImplementation: NumberImplementation<Rational> = {
         return String.fromCharCode(Math.floor(self.numerator / self.denomonator));
     },
     fromChar: function (char: string): Rational {
-        return { numerator: char.charCodeAt(0), denomonator: 0 };
+        return { numerator: char.charCodeAt(0), denomonator: 1 };
     },
     toIndex: function (self: Rational): number {
-        throw new Error("Function not implemented.");
+        return Math.floor(self.numerator / self.denomonator);
     },
     default: function (): Rational {
         return {
@@ -147,5 +156,11 @@ const RationalNumberImplementation: NumberImplementation<Rational> = {
         return RationalNumberImplementation.fromInt(
             self.numerator * other.denomonator > self.denomonator * other.numerator ? 1 : 0
         )
+    },
+    toString(self: Rational): string {
+        return self.denomonator == 1 ? ""+self.numerator : self.numerator +'/'+self.denomonator;
+    },
+    isTruthy(self: Rational): boolean {
+        return self.numerator != 0;
     }
 }

@@ -5,6 +5,7 @@ import { PathDrawer } from './gen_svg';
 import { show_copy_dialog } from './copy_dialog';
 import { init_tabs } from './init_tabs';
 import { load_explanation } from './explanation_manager';
+import { FloatingPointNumberImplementation, NumberImplementation, Rational, RationalNumberImplementation } from './number_implementation';
 
 const play_button_label = "⏵ Start"
 const pause_button_label = "⏸︎ Pause"
@@ -25,7 +26,7 @@ const reset_button = document.getElementById('reset') as HTMLButtonElement;
 
 const initial_stack = document.getElementById('initial-stack') as HTMLInputElement;
 const initial_input = document.getElementById('initial-input') as HTMLInputElement;
-const fast_forward_checkbox = document.getElementById('fast-forward') as HTMLInputElement;
+const main_form = document.getElementsByTagName('form')[0] as HTMLFormElement;
 
 let stack_format: 'numbers' | 'chars' = 'numbers';
 let input_format: 'numbers' | 'chars' = 'chars';
@@ -107,6 +108,10 @@ function load_data_from_hash() {
     }
 }
 
+const get_speed = () => {
+    return Number.parseInt(main_form.elements['speed'].value.replace(/x/, ''))
+}
+
 const format_char = <T>(number_implementation: NumberImplementation<T>): ((c:T) => string) => (value: T) => {
     const char = number_implementation.toIndex(value);
     if (char === 0 || char === 32) {
@@ -139,7 +144,7 @@ function text_with_cursor<T>(program: T[][], cursor: [number, number], number_im
 
 function update_ui_for_program(o: AnyTypeProgramState) {
     program_div.replaceChildren(...text_with_cursor<typeof o.program[0][0]>(o.program, o.cursor, o.number_implementation));
-    stack_div.innerText = o.stacks.map(i => i.contents.map(j => '' + j).join(' ')).join('\n');
+    stack_div.innerText = o.stacks.map(i => i.contents.map(j => o.number_implementation.toString(j)).join(' ')).join('\n');
 
     cursor_postion_box.textContent = JSON.stringify(o.cursor);
     register_box.textContent = o.stacks.map(i => i.register).join(', ');
@@ -171,19 +176,48 @@ function enable_editor() {
     code_textarea.style.display = 'block';
 }
 
+function initializeProgramState<T>(
+    number_implementation: NumberImplementation<T>,
+    initial_stack_values: number[],
+    content: string,
+    raw_input_queue: number[],
+): ProgramState<T> {
+    let program: T[][] = content.split('\n').map(i => [...i].map(number_implementation.fromChar));
+    let input_queue = raw_input_queue.map(number_implementation.fromInt);
+
+    return {
+        stacks: [{ contents: initial_stack_values.map(number_implementation.fromInt), register: undefined }],
+        program: program,
+        cursor: [0, 0],
+        cursor_direction: [1, 0],
+        string_parsing_mode: undefined,
+        input: () => {
+            input_queue.reverse();
+            let val = input_queue.pop() ?? number_implementation.fromInt(-1);
+            input_queue.reverse();
+            input_queue_div.textContent = input_queue.join(' ');
+            return val;
+        },
+        output: (o: T) => {
+            output_div.textContent += number_implementation.toChar(o);
+        },
+        stopped: false,
+        number_implementation
+    }
+}
+
 function reset() {
     output_div.textContent = "";
 
-    let program: number[][] = code_textarea.value.split('\n').map(i => [...i].map(j => j.codePointAt(0) as number));
     program_div.style.display = 'block';
     code_textarea.style.display = 'none';
-    let longest_line = program.reduce((a, b) => Math.max(a, b.length), 0);
+    let longest_line = code_textarea.value.split('\n').reduce((a, b) => Math.max(a, b.length), 0);
 
     let size = program_div.getClientRects()[0];
     let text_size = Math.max(
         Math.min(
             0.8 * size.width / longest_line,
-            0.8 * size.height / program.length,
+            0.8 * size.height / 4,
             80
         ),
         12
@@ -201,25 +235,10 @@ function reset() {
     const input_queue = input_format === 'chars' ? [...initial_input.value].map(i => i.charCodeAt(0)) : initial_input.value.split(' ').map(i => Number.parseFloat(i));
     input_queue_div.textContent = input_queue.join(' ');
 
-    program_state = {
-        stacks: [{ contents: initial_stack_values, register: undefined }],
-        program: program,
-        cursor: [0, 0],
-        cursor_direction: [1, 0],
-        string_parsing_mode: undefined,
-        input: () => {
-            input_queue.reverse();
-            let val = input_queue.pop() ?? -1;
-            input_queue.reverse();
-            input_queue_div.textContent = input_queue.join(' ');
-            return val;
-        },
-        output: (o: number) => {
-            output_div.textContent += String.fromCharCode(o);
-        },
-        stopped: false,
-        number_implementation: FloatingPointNumberImplementation,
-        kind: 'float'
+    if (main_form.elements['number-implementation'] == 'float') {
+        program_state = {kind: 'float', ...initializeProgramState<number>(FloatingPointNumberImplementation, initial_stack_values, code_textarea.value, input_queue)};
+    } else {
+        program_state = {kind: 'rational', ...initializeProgramState<Rational>(RationalNumberImplementation, initial_stack_values, code_textarea.value, input_queue)};
     }
 
     has_started = true;
@@ -261,7 +280,7 @@ start_button.addEventListener(
             }
 
             started_task_id = setInterval(() => {
-                let iteration = fast_forward_checkbox.checked ? 5 : 1;
+                let iteration = get_speed();
                 for (let i = 0; i < iteration; i++) {
                     step_and_update();
                     if (program_state.stopped) {
@@ -363,3 +382,5 @@ start_code_info_event_listeners(code_textarea);
 code_textarea.addEventListener('change', update_url_hash);
 initial_input.addEventListener('change', update_url_hash);
 initial_stack.addEventListener('change', update_url_hash);
+
+main_form.addEventListener('submit', (ev)=>ev.preventDefault());

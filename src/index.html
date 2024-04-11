@@ -11,235 +11,266 @@
 </head>
 
 <body class="pad">
-    <div class="two-columns" style="justify-content: space-between;">
-        <h1><a href="https://esolangs.org/wiki/Fish">&gt;&lt;&gt; (Fish)</a> Interpreter by Mousetail</h1>
-        <div>
-            <select id="examples">
-                <option> - Load an Example - </option>
-            </select>
-        </div>
-    </div>
-
-    <div class="two-columns" style="grid-template-columns: 1fr 40rem;">
-        <div class="pad">
+    <form>
+        <div class="two-columns" style="justify-content: space-between;">
+            <h1><a href="https://esolangs.org/wiki/Fish">&gt;&lt;&gt; (Fish)</a> Interpreter by Mousetail</h1>
             <div>
-                <span id="code-info">Cursor at [0,0], 0 bytes/0 chars.</span>
-                <button id="copy">Copy/Share</button>
+                <select id="examples">
+                    <option> - Load an Example - </option>
+                </select>
             </div>
-
-            <textarea class="code" id="code"></textarea>
-            <div class="program box big-box" style="display: none;" id="program"></div>
-
-            <div class="two-columns">
-                <div class="flex">
-                    <label for="initial-stack">
-                        Initial Stack:
-                    </label>
-                    <div>
-                        <div class="flex">
-                            <button id="stack-tab-chars" class="tab">
-                                Chars
-                            </button>
-                            <button id="stack-tab-numbers" class="tab">
-                                Numbers
-                            </button>
-                            <div class="tab-filler"></div>
-                        </div>
-                        <input id="initial-stack" class="no-top">
-                    </div>
-                </div>
-                <div class="flex">
-                    <label>
-                        Input:
-                    </label>
-                    <div>
-                        <div class="flex">
-                            <button id="input-tab-chars" class="tab">
-                                Chars
-                            </button>
-                            <button id="input-tab-numbers" class="tab">
-                                Numbers
-                            </button>
-                            <div class="tab-filler"></div>
-                        </div>
-                        <input id="initial-input" class="no-top">
-                    </div>
-                </div>
-            </div>
-
-
-            <hr>
-
-            <div class="button-row">
-                <button id="start">⏵ Start</button>
-                <button id="step">⏳︎ Step</button>
-                <button id="reset">⏹︎ Reset</button>
-                <div style="flex-grow: 1;">
-
-                </div>
-
-
-                <input type="checkbox" id="fast-forward">
-                <div>
-                    <label for="fast-forward">
-                        » Fast Forward
-                    </label>
-                </div>
-            </div>
-
-
-
-            <div class="two-columns">
-                <div>
-                    <h3>Stack:</h3>
-
-                    <div class="stack box small-box" id="stack"></div>
-
-                    <h3>Cursor Position:</h3>
-                    <div class="box extra-small-box" id="cursor-postion-box"></div>
-                </div>
-                <div>
-                    <h3>Input Queue:</h3>
-                    <div class="input-queue box small-box" id="input-queue"></div>
-
-                    <h3>Register:</h3>
-                    <div class="box extra-small-box" id="register-box"></div>
-
-                </div>
-            </div>
-
-            <h3>Output:</h3>
-
-            <div class="output box" id="output" style="height: 15rem;"></div>
-
         </div>
-        <div class="pad cheat-sheet">
-            <div class="flex" id="explanation-bar" style="display: none">
-                <button class="tab" id="tab-explanation-cheat-sheet">Cheat Sheet</button>
-                <button class="tab" id="tab-explanation-example">Example</button>
-                <div class="tab-filler"></div>
+
+        <div class="two-columns" style="grid-template-columns: 1fr 40rem;">
+            <div class="pad">
+                <div>
+                    <span id="code-info">Cursor at [0,0], 0 bytes/0 chars.</span>
+                    <button id="copy">Copy/Share</button>
+                </div>
+
+                <textarea class="code" id="code"></textarea>
+                <div class="program box big-box" style="display: none;" id="program"></div>
+
+                <div class="button-row" style="justify-content: space-between;">
+                    <div class="flex">
+                        <label for="initial-stack">
+                            Initial Stack:
+                        </label>
+                        <div>
+                            <div class="flex">
+                                <button id="stack-tab-chars" class="tab">
+                                    Chars
+                                </button>
+                                <button id="stack-tab-numbers" class="tab">
+                                    Numbers
+                                </button>
+                                <div class="tab-filler"></div>
+                            </div>
+                            <input id="initial-stack" class="no-top">
+                        </div>
+                    </div>
+
+                    <div class="flex">
+                        <span>
+                            Numbers:
+                        </span>
+
+                        <div class="radio-row">
+                            <input type="radio" name="number-implementation" id="number-implementation-float" class="hidden" value="float" checked>
+                            <label for="number-implementation-float">Float</label>
+
+                            <input type="radio" name="number-implementation" id="number-implementation-rational" class="hidden" value="rational">
+                            <label for="number-implementation-rational">Rational</label>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <label>
+                            Input:
+                        </label>
+                        <div>
+                            <div class="flex">
+                                <button id="input-tab-chars" class="tab">
+                                    Chars
+                                </button>
+                                <button id="input-tab-numbers" class="tab">
+                                    Numbers
+                                </button>
+                                <div class="tab-filler"></div>
+                            </div>
+                            <input id="initial-input" class="no-top">
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr>
+
+                <div class="button-row">
+                    <button id="start">⏵ Start</button>
+                    <button id="step">⏳︎ Step</button>
+                    <button id="reset">⏹︎ Reset</button>
+                    <div style="flex-grow: 1;">
+
+                    </div>
+
+
+                    <div class="flex">
+                        <span>Speed</span>
+
+                        <div class="radio-row">
+                            <input type="radio" name="speed" id="speed-1x" class="hidden" value="1x" checked>
+                            <label for="speed-1x">1X</label>
+
+                            <input type="radio" name="speed" id="speed-2x" class="hidden" value="2x">
+                            <label for="speed-2x">2X</label>
+
+                            <input type="radio" name="speed" id="speed-4x" class="hidden" value="4x">
+                            <label for="speed-4x">4X</label>
+
+                            <input type="radio" name="speed" id="speed-8x" class="hidden" value="8x">
+                            <label for="speed-8x">8X</label>
+
+                            <input type="radio" name="speed" id="speed-16x" class="hidden" value="16x">
+                            <label for="speed-16x">16X</label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="two-columns">
+                    <div>
+                        <h3>Stack:</h3>
+
+                        <div class="stack box small-box" id="stack"></div>
+
+                        <h3>Cursor Position:</h3>
+                        <div class="box extra-small-box" id="cursor-postion-box"></div>
+                    </div>
+                    <div>
+                        <h3>Input Queue:</h3>
+                        <div class="input-queue box small-box" id="input-queue"></div>
+
+                        <h3>Register:</h3>
+                        <div class="box extra-small-box" id="register-box"></div>
+
+                    </div>
+                </div>
+
+                <h3>Output:</h3>
+
+                <div class="output box" id="output" style="height: 15rem;"></div>
+
             </div>
-            <div id="tab-content-cheat-sheet" class="pad">
-                <h2>Cheat Sheet</h2>
+            <div class="pad cheat-sheet">
+                <div class="flex" id="explanation-bar" style="display: none">
+                    <button class="tab" id="tab-explanation-cheat-sheet">Cheat Sheet</button>
+                    <button class="tab" id="tab-explanation-example">Example</button>
+                    <div class="tab-filler"></div>
+                </div>
+                <div id="tab-content-cheat-sheet" class="pad">
+                    <h2>Cheat Sheet</h2>
 
-                <h3>Movement</h3>
+                    <h3>Movement</h3>
 
-                <div class="two-columns">
-                    <div>
-                        <p><code data-symbol="&gt;&lt;^v">&lt;&gt;^v</code> Change Cursor Direction</p>
+                    <div class="two-columns">
+                        <div>
+                            <p><code data-symbol="&gt;&lt;^v">&lt;&gt;^v</code> Change Cursor Direction</p>
+                        </div>
+                        <div>
+                            <p><code data-symbol="\/|_#">/\|_#</code> Reflect the cursor direction</p>
+                        </div>
                     </div>
-                    <div>
-                        <p><code data-symbol="\/|_#">/\|_#</code> Reflect the cursor direction</p>
+
+                    <p><code data-symbol="x">x</code> Change cursor directon randomly</p>
+
+                    <p><code data-symbol="!">!</code> Skip the next instruction, moving 2 spaces instead of 1</p>
+
+                    <p><code data-symbol="?">?</code> Pop 1 value of the stack, if it's 0 skip the next instruction and move
+                        forward 2
+                        spaces.
+                    </p>
+
+                    <p><code data-symbol=".">.</code> Pop 2 values of the stack then move to that position.</p>
+
+                    <h3>Literals</h3>
+
+                    <div class="two-columns">
+                        <div>
+                            <p><code data-symbol="0123456789">0123456789</code> Push the number (0-9)</p>
+                        </div>
+                        <div>
+                            <p><code data-symbol="abcdef">abcdef</code> Push the number in hexadecimal (10-15)</p>
+                        </div>
                     </div>
+
+                    <p><code data-symbol="+-*%">+-*%</code> Pop 2 values of the stack then perform the given operation.</p>
+
+                    <p><code data-symbol=",">,</code> Divide the top 2 values of the stack.</p>
+
+                    <p><code data-symbol="=">=</code> Pop 2 values of the stack, push 1 if they are equal and 0 otherwise
+                    </p>
+
+                    <p><code data-symbol=")(">)(</code> Greater than, less than. Push 1 or 0 to the stack.</p>
+
+                    <p><code data-symbol="'&quot;">'" </code> Enable or disable string parsing mode. In string parsing mode
+                        all characters are pushed to the stack instead of executed.</p>
+                    <h3>Stack</h3>
+
+                    <div class="two-columns">
+                        <div>
+                            <p><code data-symbol=":">:</code> Duplicate the top item on the stack</p>
+                            <p><code data-symbol="$">$</code> Move the top element of the stack back 1</p>
+                        </div>
+                        <div>
+                            <p><code data-symbol="~">~</code> Delete the top element of the stack</p>
+                            <p><code data-symbol="@">@</code> Move the top element of the stack back 2</p>
+                        </div>
+                    </div>
+
+                    <p><code data-symbol="{}">{}</code> Shifts the entire stack left or right</p>
+
+                    <p><code data-symbol="r">r</code> Reverse the stack</p>
+
+                    <p><code data-symbol="l">l</code> Push the length of the stack to the stack</p>
+
+                    <p><code data-symbol="[">[</code> Pop N from the stack, then create a new stack containing the top N
+                        elements of
+                        the old
+                        stack.</p>
+
+                    <p><code data-symbol="]">]</code> Go back to the previous stack, adding all elements of the top stack
+                        back to
+                        it.</p>
+
+                    <h3>IO</h3>
+
+                    <div class="two-columns">
+                        <div>
+                            <p><code data-symbol="o">o</code> output a character</p>
+                        </div>
+                        <div>
+                            <p><code data-symbol="n">n</code> output a number in decimal</p>
+                        </div>
+                    </div>
+                    <p><code data-symbol="i">i</code> read a character</p>
+
+                    <h3>Other</h3>
+
+                    <p><code data-symbol="&">&</code> If the register is empty, pop the top element of the stack and move it
+                        to the
+                        register.
+                        Else push the value of the register to the stack.</p>
+
+                    <p><code data-symbol="g">g</code> Pop the top 2 elements then push the code value at that position</p>
+
+                    <p><code data-symbol="p">p</code> Pop a postion and a value from the stack, then write the character to
+                        that
+                        position in
+                        the
+                        code.</p>
+
+                    <p><code data-symbol=";">;</code> Halt</p>
+                </div>
+                <div id="tab-content-example" class="pad">
+
                 </div>
 
-                <p><code data-symbol="x">x</code> Change cursor directon randomly</p>
-
-                <p><code data-symbol="!">!</code> Skip the next instruction, moving 2 spaces instead of 1</p>
-
-                <p><code data-symbol="?">?</code> Pop 1 value of the stack, if it's 0 skip the next instruction and move
-                    forward 2
-                    spaces.
-                </p>
-
-                <p><code data-symbol=".">.</code> Pop 2 values of the stack then move to that position.</p>
-
-                <h3>Literals</h3>
-
-                <div class="two-columns">
-                    <div>
-                        <p><code data-symbol="0123456789">0123456789</code> Push the number (0-9)</p>
-                    </div>
-                    <div>
-                        <p><code data-symbol="abcdef">abcdef</code> Push the number in hexadecimal (10-15)</p>
-                    </div>
-                </div>
-
-                <p><code data-symbol="+-*%">+-*%</code> Pop 2 values of the stack then perform the given operation.</p>
-
-                <p><code data-symbol=",">,</code> Divide the top 2 values of the stack.</p>
-
-                <p><code data-symbol="=">=</code> Pop 2 values of the stack, push 1 if they are equal and 0 otherwise
-                </p>
-
-                <p><code data-symbol=")(">)(</code> Greater than, less than. Push 1 or 0 to the stack.</p>
-
-                <p><code data-symbol="'&quot;">'" </code> Enable or disable string parsing mode. In string parsing mode
-                    all characters are pushed to the stack instead of executed.</p>
-                <h3>Stack</h3>
-
-                <div class="two-columns">
-                    <div>
-                        <p><code data-symbol=":">:</code> Duplicate the top item on the stack</p>
-                        <p><code data-symbol="$">$</code> Move the top element of the stack back 1</p>
-                    </div>
-                    <div>
-                        <p><code data-symbol="~">~</code> Delete the top element of the stack</p>
-                        <p><code data-symbol="@">@</code> Move the top element of the stack back 2</p>
-                    </div>
-                </div>
-
-                <p><code data-symbol="{}">{}</code> Shifts the entire stack left or right</p>
-
-                <p><code data-symbol="r">r</code> Reverse the stack</p>
-
-                <p><code data-symbol="l">l</code> Push the length of the stack to the stack</p>
-
-                <p><code data-symbol="[">[</code> Pop N from the stack, then create a new stack containing the top N
-                    elements of
-                    the old
-                    stack.</p>
-
-                <p><code data-symbol="]">]</code> Go back to the previous stack, adding all elements of the top stack
-                    back to
-                    it.</p>
-
-                <h3>IO</h3>
-
-                <div class="two-columns">
-                    <div>
-                        <p><code data-symbol="o">o</code> output a character</p>
-                    </div>
-                    <div>
-                        <p><code data-symbol="n">n</code> output a number in decimal</p>
-                    </div>
-                </div>
-                <p><code data-symbol="i">i</code> read a character</p>
-
-                <h3>Other</h3>
-
-                <p><code data-symbol="&">&</code> If the register is empty, pop the top element of the stack and move it
-                    to the
-                    register.
-                    Else push the value of the register to the stack.</p>
-
-                <p><code data-symbol="g">g</code> Pop the top 2 elements then push the code value at that position</p>
-
-                <p><code data-symbol="p">p</code> Pop a postion and a value from the stack, then write the character to
-                    that
-                    position in
-                    the
-                    code.</p>
-
-                <p><code data-symbol=";">;</code> Halt</p>
             </div>
-            <div id="tab-content-example" class="pad">
-
-            </div>
-
         </div>
-    </div>
 
-    <hr>
-    <div class="footer pad">
-        The &gt;&lt;&gt; (Fish) langauge was designed by <a
-            href="https://esolangs.org/wiki/User:Harpyon">Harypon</a><br>
-        This implementation was built by <a href="https://mousetail.nl"">Mousetail</a>, some code taken from
-        <a href=" https://suppen.no/fishlanguage/">Suppen</a><br>
-        Source code available here <a href="https://github.com/mousetail/Fish/">on Github</a><br>
-    </div>
+        <hr>
+        <div class="footer pad">
+            The &gt;&lt;&gt; (Fish) langauge was designed by <a
+                href="https://esolangs.org/wiki/User:Harpyon">Harypon</a><br>
+            This implementation was built by <a href="https://mousetail.nl"">Mousetail</a>, some code taken from
+            <a href=" https://suppen.no/fishlanguage/">Suppen</a><br>
+            Source code available here <a href="https://github.com/mousetail/Fish/">on Github</a><br>
+        </div>
 
-    <script src=" scripts/main.ts" type="module"></script>
+        <script src=" scripts/main.ts" type="module"></script>
+
+    </form>
 </body>
 
 </html>

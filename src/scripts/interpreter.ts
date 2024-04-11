@@ -1,3 +1,5 @@
+import { NumberImplementation, Rational } from "./number_implementation";
+
 export interface Stack<T> {
     contents: T[],
     register: T | undefined
@@ -30,7 +32,8 @@ function push<T>(o: ProgramState<T>, n: T) {
 
 function wrap<T>(f: (x: T, y: T, z: NumberImplementation<T>) => T) {
     return (o: ProgramState<T>) => {
-        push(o, f(pop(o), pop(o), o.number_implementation))
+        let [x, y] = [pop(o), pop(o)];
+        push(o, f(y, x, o.number_implementation))
     }
 }
 
@@ -91,7 +94,7 @@ const commands: {[k: string]: <T>(o: ProgramState<T>) => void} = {
         o.cursor[1] += o.cursor_direction[1];
     },
     '?': (o) => {
-        if (pop(o) === 0) {
+        if (!o.number_implementation.isTruthy(pop(o))) {
             o.cursor[0] += o.cursor_direction[0];
             o.cursor[1] += o.cursor_direction[1];
         }
@@ -200,7 +203,7 @@ const commands: {[k: string]: <T>(o: ProgramState<T>) => void} = {
         o.output(pop(o))
     },
     'n': (o) => {
-        let res: string = '' + pop(o);
+        let res: string = o.number_implementation.toString(pop(o));
         for (let i = 0; i < res.length; i++) {
             o.output(o.number_implementation.fromInt(res.charCodeAt(i)))
         }
@@ -256,7 +259,7 @@ const commands: {[k: string]: <T>(o: ProgramState<T>) => void} = {
     }
 }
 
-type AnyTypeProgramState = {kind: 'float'} & ProgramState<number> | {kind: 'rational'} & ProgramState<Rational>;
+export type AnyTypeProgramState = {kind: 'float'} & ProgramState<number> | {kind: 'rational'} & ProgramState<Rational>;
 
 function _step<T>(o: ProgramState<T>) {
     let token_code: T = o.cursor[0] < o.program[o.cursor[1]].length ? o.program[o.cursor[1]][o.cursor[0]] ?? o.number_implementation.default() : o.number_implementation.default();
@@ -268,7 +271,7 @@ function _step<T>(o: ProgramState<T>) {
         token = '�'
     }
     if (o.string_parsing_mode !== undefined) {
-        if (token_code === o.string_parsing_mode) {
+        if (o.number_implementation.isTruthy(o.number_implementation.eq(token_code, o.string_parsing_mode))) {
             o.string_parsing_mode = undefined
         } else {
             push(o, token_code);
