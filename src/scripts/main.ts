@@ -1,4 +1,4 @@
-import { step, ProgramState } from './interpreter';
+import { step, AnyTypeProgramState, ProgramState } from './interpreter';
 import { examples } from './examples';
 import { start_code_info_event_listeners } from './update_code_info';
 import { PathDrawer } from './gen_svg';
@@ -107,7 +107,8 @@ function load_data_from_hash() {
     }
 }
 
-function format_char(char: number) {
+const format_char = <T>(number_implementation: NumberImplementation<T>): ((c:T) => string) => (value: T) => {
+    const char = number_implementation.toIndex(value);
     if (char === 0 || char === 32) {
         return ' '
     } else if (char >= 33 && char % 1 == 0) {
@@ -117,8 +118,8 @@ function format_char(char: number) {
     }
 }
 
-function text_with_cursor(program: number[][], cursor: [number, number]): (string | Node)[] {
-    let text = program.map(line => line.map(format_char).join(''))
+function text_with_cursor<T>(program: T[][], cursor: [number, number], number_implementation: NumberImplementation<T>): (string | Node)[] {
+    let text = program.map(line => line.map(format_char(number_implementation)).join(''))
 
     let text_before = text.slice(0, cursor[1]).map(i => i + '\n').join('') + text[cursor[1]].substring(0, cursor[0]);
     let text_after = text[cursor[1]].substring(cursor[0] + 1) + '\n' + text.slice(cursor[1] + 1).map(i => i + '\n').join('');
@@ -136,15 +137,15 @@ function text_with_cursor(program: number[][], cursor: [number, number]): (strin
     ]
 }
 
-function update_ui_for_program(o: ProgramState) {
-    program_div.replaceChildren(...text_with_cursor(o.program, o.cursor));
+function update_ui_for_program(o: AnyTypeProgramState) {
+    program_div.replaceChildren(...text_with_cursor<typeof o.program[0][0]>(o.program, o.cursor, o.number_implementation));
     stack_div.innerText = o.stacks.map(i => i.contents.map(j => '' + j).join(' ')).join('\n');
 
     cursor_postion_box.textContent = JSON.stringify(o.cursor);
     register_box.textContent = o.stacks.map(i => i.register).join(', ');
 }
 
-let program_state: ProgramState = {
+let program_state: AnyTypeProgramState = {
     stacks: [{ contents: [], register: undefined }],
     program: [[32]],
     cursor: [0, 0],
@@ -152,7 +153,9 @@ let program_state: ProgramState = {
     string_parsing_mode: undefined,
     input: () => 0,
     output: (o: number) => undefined,
-    stopped: false
+    stopped: false,
+    kind: 'float',
+    number_implementation: FloatingPointNumberImplementation
 }
 
 function end_update_loop_if_active() {
@@ -214,7 +217,9 @@ function reset() {
         output: (o: number) => {
             output_div.textContent += String.fromCharCode(o);
         },
-        stopped: false
+        stopped: false,
+        number_implementation: FloatingPointNumberImplementation,
+        kind: 'float'
     }
 
     has_started = true;

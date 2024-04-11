@@ -1,20 +1,22 @@
-export interface Stack {
-    contents: number[],
-    register: number | undefined
+export interface Stack<T> {
+    contents: T[],
+    register: T | undefined
 }
 
-export interface ProgramState {
-    stacks: Stack[];
-    program: number[][];
+export interface ProgramState<T> {
+    stacks: Stack<T>[];
+    program: T[][];
     cursor: [number, number];
     cursor_direction: [number, number];
-    input: () => number;
-    output: (_: number) => void;
-    string_parsing_mode: undefined | number;
+    input: () => T;
+    output: (_: T) => void;
+    string_parsing_mode: undefined | T;
     stopped: boolean;
+    number_implementation: NumberImplementation<T>
+
 }
 
-function pop(o: ProgramState): number {
+function pop<T>(o: ProgramState<T>): T {
     const out = o.stacks[o.stacks.length - 1].contents.pop()
     if (out === undefined) {
         throw new Error("Attempt to read from empty stack");
@@ -22,61 +24,61 @@ function pop(o: ProgramState): number {
     return out;
 }
 
-function push(o: ProgramState, n: number) {
+function push<T>(o: ProgramState<T>, n: T) {
     o.stacks[o.stacks.length - 1].contents.push(n)
 }
 
-function wrap(f: (x: number, y: number) => number) {
-    return (o: ProgramState) => {
-        push(o, f(pop(o), pop(o)))
+function wrap<T>(f: (x: T, y: T, z: NumberImplementation<T>) => T) {
+    return (o: ProgramState<T>) => {
+        push(o, f(pop(o), pop(o), o.number_implementation))
     }
 }
 
-const commands = {
+const commands: {[k: string]: <T>(o: ProgramState<T>) => void} = {
     // Movement and Execution
-    '<': (o: ProgramState) => {
+    '<': (o) => {
         o.cursor_direction = [-1, 0];
     },
-    '>': (o: ProgramState) => {
+    '>': (o) => {
         o.cursor_direction = [1, 0];
     },
-    '^': (o: ProgramState) => {
+    '^': (o) => {
         o.cursor_direction = [0, -1];
     },
-    'v': (o: ProgramState) => {
+    'v': (o) => {
         o.cursor_direction = [0, 1];
     },
-    '\\': (o: ProgramState) => {
+    '\\': (o) => {
         o.cursor_direction = [
             o.cursor_direction[1],
             o.cursor_direction[0]
         ]
     },
-    '/': (o: ProgramState) => {
+    '/': (o) => {
         o.cursor_direction = [
             -o.cursor_direction[1],
             -o.cursor_direction[0]
         ]
     },
-    '|': (o: ProgramState) => {
+    '|': (o) => {
         o.cursor_direction = [
             -o.cursor_direction[0],
             o.cursor_direction[1]
         ]
     },
-    '_': (o: ProgramState) => {
+    '_': (o) => {
         o.cursor_direction = [
             o.cursor_direction[0],
             -o.cursor_direction[1]
         ]
     },
-    '#': (o: ProgramState) => {
+    '#': (o) => {
         o.cursor_direction = [
             -o.cursor_direction[0],
             -o.cursor_direction[1]
         ]
     },
-    'x': (o: ProgramState) => {
+    'x': (o) => {
         o.cursor_direction = [
             [-1, 0],
             [0, 1],
@@ -84,101 +86,95 @@ const commands = {
             [0, -1]
         ][Math.floor(Math.random() * 4)] as ([number, number])
     },
-    '!': (o: ProgramState) => {
+    '!': (o) => {
         o.cursor[0] += o.cursor_direction[0];
         o.cursor[1] += o.cursor_direction[1];
     },
-    '?': (o: ProgramState) => {
+    '?': (o) => {
         if (pop(o) === 0) {
             o.cursor[0] += o.cursor_direction[0];
             o.cursor[1] += o.cursor_direction[1];
         }
     },
-    '.': (o: ProgramState) => {
+    '.': (o) => {
         let [y, x] = [pop(o), pop(o)]
         o.cursor = [
-            x, y
+            o.number_implementation.toIndex(x), o.number_implementation.toIndex(y)
         ]
     },
 
     // Literals
-    '0': (o: ProgramState) => push(o, 0),
-    '1': (o: ProgramState) => push(o, 1),
-    '2': (o: ProgramState) => push(o, 2),
-    '3': (o: ProgramState) => push(o, 3),
-    '4': (o: ProgramState) => push(o, 4),
-    '5': (o: ProgramState) => push(o, 5),
-    '6': (o: ProgramState) => push(o, 6),
-    '7': (o: ProgramState) => push(o, 7),
-    '8': (o: ProgramState) => push(o, 8),
-    '9': (o: ProgramState) => push(o, 9),
-    'a': (o: ProgramState) => push(o, 10),
-    'b': (o: ProgramState) => push(o, 11),
-    'c': (o: ProgramState) => push(o, 12),
-    'd': (o: ProgramState) => push(o, 13),
-    'e': (o: ProgramState) => push(o, 14),
-    'f': (o: ProgramState) => push(o, 15),
+    '0': (o) => push(o, o.number_implementation.fromInt(0)),
+    '1': (o) => push(o, o.number_implementation.fromInt(1)),
+    '2': (o) => push(o, o.number_implementation.fromInt(2)),
+    '3': (o) => push(o, o.number_implementation.fromInt(3)),
+    '4': (o) => push(o, o.number_implementation.fromInt(4)),
+    '5': (o) => push(o, o.number_implementation.fromInt(5)),
+    '6': (o) => push(o, o.number_implementation.fromInt(6)),
+    '7': (o) => push(o, o.number_implementation.fromInt(7)),
+    '8': (o) => push(o, o.number_implementation.fromInt(8)),
+    '9': (o) => push(o, o.number_implementation.fromInt(9)),
+    'a': (o) => push(o, o.number_implementation.fromInt(10)),
+    'b': (o) => push(o, o.number_implementation.fromInt(11)),
+    'c': (o) => push(o, o.number_implementation.fromInt(12)),
+    'd': (o) => push(o, o.number_implementation.fromInt(13)),
+    'e': (o) => push(o, o.number_implementation.fromInt(14)),
+    'f': (o) => push(o, o.number_implementation.fromInt(15)),
 
     // Operators
-    '+': wrap((a, b) => a + b),
-    '*': wrap((a, b) => a * b),
-    '-': wrap((a, b) => b - a),
-    ',': wrap((a, b) => b / a),
-    '%': wrap((a, b) => ((b % a) + a) % a),
-    '=': (o: ProgramState) => {
-        push(o, Number(pop(o) == pop(o)))
+    '+': wrap((a, b, number_implementation) => number_implementation.add(a, b)),
+    '*': wrap((a, b, number_implementation) => number_implementation.mul(a, b)),
+    '-': wrap((a, b, number_implementation) => number_implementation.sub(a, b)),
+    ',': wrap((a, b, number_implementation) => number_implementation.div(a, b)),
+    '%': wrap((a, b, number_implementation) => number_implementation.mod(a, b)),
+    '=': wrap((a, b, number_implementation) => number_implementation.eq(a, b)),
+    ')': wrap((a, b, number_implementation) => number_implementation.lt(a, b)),
+    '(': wrap((a, b, number_implementation) => number_implementation.gt(a, b)),
+    '\'': (o) => {
+        o.string_parsing_mode = o.number_implementation.fromChar('\'');
     },
-    ')': (o: ProgramState) => {
-        push(o, Number(pop(o) < pop(o)))
-    },
-    '(': (o: ProgramState) => {
-        push(o, Number(pop(o) > pop(o)))
-    },
-    '\'': (o: ProgramState) => {
-        o.string_parsing_mode = '\''.charCodeAt(0);
-    },
-    '"': (o: ProgramState) => {
-        o.string_parsing_mode = '"'.charCodeAt(0);
+    '"': (o) => {
+        o.string_parsing_mode = o.number_implementation.fromChar('"');
     },
 
     // Stack Manipulation
-    ':': (o: ProgramState) => {
+    ':': (o) => {
         const val = pop(o);
         push(o, val);
         push(o, val);
     },
-    '~': (o: ProgramState) => pop(o),
-    '$': (o: ProgramState) => {
+    '~': (o) => pop(o),
+    '$': (o) => {
         const [x, y] = [pop(o), pop(o)]
         push(o, x);
         push(o, y);
     },
-    '@': (o: ProgramState) => {
+    '@': (o) => {
         const [x, y, z] = [pop(o), pop(o), pop(o)];
         push(o, x); push(o, z); push(o, y);
     },
-    '{': (o: ProgramState) => {
+    '{': <T>(o: ProgramState<T>) => {
         if (o.stacks[o.stacks.length -1].contents.length > 0) {
-            let a = o.stacks[o.stacks.length - 1].contents.shift();
-            push(o, a as number);
+            let a = o.stacks[o.stacks.length - 1].contents.shift() as T;
+            push(o, a);
         }
     },
-    '}': (o: ProgramState) => {
+    '}': <T>(o: ProgramState<T>) => {
         if (o.stacks[o.stacks.length -1].contents.length > 0) {
-            let a = o.stacks[o.stacks.length - 1].contents.pop();
-            o.stacks[o.stacks.length - 1].contents.unshift(a as number);
+            let a = o.stacks[o.stacks.length - 1].contents.pop() as T;
+            o.stacks[o.stacks.length - 1].contents.unshift(a);
         }
     },
-    'r': (o: ProgramState) => {
+    'r': (o) => {
         o.stacks[o.stacks.length - 1].contents.reverse();
     },
-    'l': (o: ProgramState) => {
-        push(o, o.stacks[o.stacks.length - 1].contents.length)
+    'l': (o) => {
+        push(o, o.number_implementation.fromInt(o.stacks[o.stacks.length - 1].contents.length))
     },
-    '[': (o: ProgramState) => {
-        let number = pop(o);
+    '[': <T>(o: ProgramState<T>) => {
+        let number = o.number_implementation.toIndex(pop(o));
 
-        const new_stack: number[] = [];
+        const new_stack: T[] = [];
         for (let i = 0; i < number; i++) {
             new_stack.push(pop(o));
         }
@@ -190,7 +186,7 @@ const commands = {
             }
         )
     },
-    ']': (o: ProgramState) => {
+    ']': (o) => {
         let last_stack = o.stacks.pop();
         if (last_stack !== undefined && o.stacks.length >= 1) {
             o.stacks[o.stacks.length - 1].contents = o.stacks[o.stacks.length - 1].contents.concat(last_stack.contents)
@@ -200,21 +196,21 @@ const commands = {
     },
 
     // Input/Output
-    'o': (o: ProgramState) => {
+    'o': (o) => {
         o.output(pop(o))
     },
-    'n': (o: ProgramState) => {
+    'n': (o) => {
         let res: string = '' + pop(o);
         for (let i = 0; i < res.length; i++) {
-            o.output(res.charCodeAt(i))
+            o.output(o.number_implementation.fromInt(res.charCodeAt(i)))
         }
     },
-    'i': (o: ProgramState) => {
+    'i': (o) => {
         push(o, o.input())
     },
 
     // Reflection
-    '&': (o: ProgramState) => {
+    '&': (o) => {
         let last_stack = o.stacks[o.stacks.length - 1];
         if (last_stack.register === undefined) {
             last_stack.register = pop(o)
@@ -223,8 +219,8 @@ const commands = {
             last_stack.register = undefined;
         }
     },
-    'g': (o: ProgramState) => {
-        let [y, x] = [pop(o), pop(o)];
+    'g': (o) => {
+        let [y, x] = [o.number_implementation.toIndex(pop(o)), o.number_implementation.toIndex(pop(o))];
         if (x < 0) {
             x = 0;
         }
@@ -241,33 +237,33 @@ const commands = {
         else {
             push(
                 o,
-                0
+                o.number_implementation.default()
             )
         }
     },
-    'p': (o: ProgramState) => {
-        let [y, x, v] = [pop(o), pop(o), pop(o)];
+    'p': (o) => {
+        let [y, x, v] = [o.number_implementation.toIndex(pop(o)), o.number_implementation.toIndex(pop(o)), pop(o)];
         while (o.program.length <= y) {
             o.program.push([]);
         }
         while (o.program[y].length < x) {
-            o.program[y].push(0);
+            o.program[y].push(o.number_implementation.default());
         }
         o.program[y][x] = v;
     },
-    ';': (o: ProgramState) => {
+    ';': (o) => {
         o.stopped = true;
     }
-
-
 }
 
-export function step(o: ProgramState) {
-    let token_code: number = o.cursor[0] < o.program[o.cursor[1]].length ? o.program[o.cursor[1]][o.cursor[0]] ?? 0 : 0;
+type AnyTypeProgramState = {kind: 'float'} & ProgramState<number> | {kind: 'rational'} & ProgramState<Rational>;
+
+function _step<T>(o: ProgramState<T>) {
+    let token_code: T = o.cursor[0] < o.program[o.cursor[1]].length ? o.program[o.cursor[1]][o.cursor[0]] ?? o.number_implementation.default() : o.number_implementation.default();
 
     let token: string;
     try {
-        token = String.fromCodePoint(token_code)
+        token = o.number_implementation.toChar(token_code)
     } catch {
         token = '�'
     }
@@ -299,5 +295,13 @@ export function step(o: ProgramState) {
     if (o.cursor_direction[1] != 0) {
         o.cursor[1] += o.cursor_direction[1];
         o.cursor[1] = (o.cursor[1] + o.program.length) % o.program.length;
+    }
+}
+
+export function step(o: AnyTypeProgramState) {
+    if (o.kind == 'float') {
+        _step<number>(o)
+    } else {
+        _step<Rational>(o)
     }
 }
