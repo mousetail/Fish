@@ -36,7 +36,8 @@ body {
 }
 
 .two-columns>div {
-    flex-grow: 1;
+    min-width: 0;
+    min-height: 0;
 }
 
 .flex {
@@ -137,6 +138,7 @@ button:hover:not(:disabled) {
 
 .program {
     white-space: pre;
+    overflow-x: auto;
 }
 
 .cursor {
