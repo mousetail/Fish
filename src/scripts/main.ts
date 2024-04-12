@@ -147,7 +147,7 @@ function update_ui_for_program(o: AnyTypeProgramState) {
     stack_div.innerText = o.stacks.map(i => i.contents.map(j => o.number_implementation.toString(j)).join(' ')).join('\n');
 
     cursor_postion_box.textContent = JSON.stringify(o.cursor);
-    register_box.textContent = o.stacks.map(i => o.number_implementation.toString(i.register)).join(', ');
+    register_box.textContent = o.stacks.map(i => i.register && o.number_implementation.toString(i.register)).join(', ');
 }
 
 let program_state: AnyTypeProgramState = {
