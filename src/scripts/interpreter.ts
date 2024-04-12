@@ -131,8 +131,8 @@ const commands: {[k: string]: <T>(o: ProgramState<T>) => void} = {
     ',': wrap((a, b, number_implementation) => number_implementation.div(a, b)),
     '%': wrap((a, b, number_implementation) => number_implementation.mod(a, b)),
     '=': wrap((a, b, number_implementation) => number_implementation.eq(a, b)),
-    ')': wrap((a, b, number_implementation) => number_implementation.lt(a, b)),
-    '(': wrap((a, b, number_implementation) => number_implementation.gt(a, b)),
+    ')': wrap((a, b, number_implementation) => number_implementation.gt(a, b)),
+    '(': wrap((a, b, number_implementation) => number_implementation.lt(a, b)),
     '\'': (o) => {
         o.string_parsing_mode = o.number_implementation.fromChar('\'');
     },
