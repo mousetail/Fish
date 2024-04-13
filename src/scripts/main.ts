@@ -217,7 +217,7 @@ function reset() {
     let text_size = Math.max(
         Math.min(
             0.8 * size.width / longest_line,
-            0.8 * size.height / 4,
+            0.8 * size.height / code_textarea.value.split('\n').length,
             80
         ),
         12
