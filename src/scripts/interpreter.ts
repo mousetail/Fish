@@ -224,14 +224,8 @@ const commands: {[k: string]: <T>(o: ProgramState<T>) => void} = {
     },
     'g': (o) => {
         let [y, x] = [o.number_implementation.toIndex(pop(o)), o.number_implementation.toIndex(pop(o))];
-        if (x < 0) {
-            x = 0;
-        }
-        if (y < 0) {
-            y = 0;
-        }
-
-        if (y < o.program.length && x < o.program[y].length) {
+        
+        if (x >= 0 && y >= 0 && y < o.program.length && x < o.program[y].length) {
             push(
                 o,
                 o.program[y][x]
