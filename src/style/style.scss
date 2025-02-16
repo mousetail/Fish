@@ -30,6 +30,15 @@ body {
     --disabled-color: #222;
 }
 
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: white;
+        color: black;
+
+        --disabled-color: #ddd;
+    }
+}
+
 .two-columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -80,6 +89,18 @@ option {
     font-family: inherit;
 }
 
+@media (prefers-color-scheme: light) {
+    textarea,
+    input,
+    button,
+    select,
+    option {
+        background-color: transparent;
+        border: 1px solid grey;
+        color: black;
+    }
+}
+
 input {
     width: 20rem;
     outline: none;
@@ -92,6 +113,12 @@ input {
 
 option {
     background-color: black;
+}
+
+@media (prefers-color-scheme: light) {
+    option {
+        background-color: white;
+    }
 }
 
 button {
@@ -123,6 +150,14 @@ button:hover:not(:disabled) {
     border-color: white;
 }
 
+@media (prefers-color-scheme: light) {
+    button:hover:not(:disabled) {
+        color: white;
+        background-color: black;
+        border-color: black;
+    }
+}
+
 .small-box {
     min-height: 4rem;
 }
@@ -150,10 +185,24 @@ a {
     color: white;
 }
 
+@media (prefers-color-scheme: light) {
+    a {
+        color: black;
+    }
+}
+
 code {
     background-color: #333;
     padding: 0.2rem;
     display: inline-block;
+}
+
+@media (prefers-color-scheme: light) {
+    code {
+        background-color: #ccc;
+        padding: 0.2rem;
+        display: inline-block;
+    }
 }
 
 p {
@@ -183,6 +232,13 @@ input[type="checkbox"]:checked {
     background-color: white;
 }
 
+@media (prefers-color-scheme: light) {
+    input[type="checkbox"]:checked {
+        /* Use `visibility` instead of `display` to avoid recalculating layout */
+        background-color: black;
+    }
+}
+
 .modal {
     background-color: black;
     border: 1px solid white;
@@ -192,6 +248,14 @@ input[type="checkbox"]:checked {
     width: calc(100vw - 2rem);
     padding: 1rem;
 }
+
+@media (prefers-color-scheme: light) {
+    .modal {
+        background-color: white;
+        border: 1px solid black;
+    }
+}
+
 
 .tab {
     padding: 0.21rem 1.31rem 0.21rem 0.75rem;
@@ -229,6 +293,23 @@ input[type="checkbox"]:checked {
     &:not(:disabled):hover::after {
         background-color: white;
         border-color: white;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .tab {
+        &:disabled {
+            color: black;
+        }
+
+        &:after {
+            background-color: white;
+        }
+
+        &:not(:disabled):hover::after {
+            background-color: black;
+            border-color: black;
+        }
     }
 }
 
