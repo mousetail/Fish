@@ -22,12 +22,12 @@ export interface NumberImplementation<T> {
 }
 
 export type Rational = {
-    numerator: number,
-    denomonator: number
+    numerator: BigInt,
+    denomonator: BigInt,
 }
 
-function gcd(a: number, b: number): number {
-    [a, b] = [a, b].map(Math.abs);
+function gcd(a: BigInt, b: BigInt): BigInt {
+    [a, b] = [a, b].map(x => x < 0n ? -x : x);
     while (b) {
         [a, b] = [b, a % b];
     }
@@ -35,7 +35,7 @@ function gcd(a: number, b: number): number {
   }
 
 function reduce(rational: Rational): Rational {
-    const factor = gcd(rational.numerator, rational.denomonator) * (rational.denomonator < 0 ? -1 : 1);
+    const factor = gcd(rational.numerator, rational.denomonator) * (rational.denomonator < 0n ? -1n : 1n);
     return {
         numerator: rational.numerator / factor,
         denomonator: rational.denomonator / factor,
@@ -122,24 +122,24 @@ export const RationalNumberImplementation: NumberImplementation<Rational> = {
         });
     },
     toChar: function (self: Rational): string {
-        return String.fromCharCode(Math.floor(self.numerator / self.denomonator));
+        return String.fromCharCode(Number(self.numerator / self.denomonator));
     },
     fromChar: function (char: string): Rational {
-        return { numerator: char.charCodeAt(0), denomonator: 1 };
+        return { numerator: BigInt(char.charCodeAt(0)), denomonator: 1n };
     },
     toIndex: function (self: Rational): number {
-        return Math.floor(self.numerator / self.denomonator);
+        return Number(self.numerator / self.denomonator);
     },
     default: function (): Rational {
         return {
-            numerator: 0,
-            denomonator: 1
+            numerator: 0n,
+            denomonator: 1n
         };
     },
     fromInt: function (d: number): Rational {
         return {
-            numerator: d,
-            denomonator: 1
+            numerator: BigInt(d),
+            denomonator: 1n
         };
     },
     eq: function (self: Rational, other: Rational): Rational {
@@ -158,9 +158,9 @@ export const RationalNumberImplementation: NumberImplementation<Rational> = {
         )
     },
     toString(self: Rational): string {
-        return self.denomonator == 1 ? ""+self.numerator : self.numerator +'/'+self.denomonator;
+        return self.denomonator == 1n ? ""+self.numerator : self.numerator +'/'+self.denomonator;
     },
     isTruthy(self: Rational): boolean {
-        return self.numerator != 0;
+        return self.numerator != 0n;
     }
 }
